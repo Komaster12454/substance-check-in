@@ -417,17 +417,17 @@
         </div>
 
         <section class="block">
-          <h3>What can feel normal-ish</h3>
+          <h3>Things people commonly notice</h3>
           <div class="effects" id="effects"></div>
         </section>
 
         <section class="block">
-          <h3>If it feels intense</h3>
+          <h3>When it gets intense</h3>
           <div class="calm" id="calm"></div>
         </section>
 
         <section class="block">
-          <h3>Good harm-reduction anchors</h3>
+          <h3>Useful anchors</h3>
           <ul class="list" id="anchors"></ul>
         </section>
 
@@ -438,20 +438,20 @@
 
         <section class="post-calc" id="postCalc">
           <div class="post-calc-head">
-            <h3>Already-taken calculator</h3>
-            <span>after-the-fact context</span>
+            <h3>What I already took</h3>
+            <span>post-use check</span>
           </div>
 
           <div class="post-calc-body">
             <div class="calc-note">
-              Enter the amount you <b>already took</b> and the method you used.
-              The result gives unit math, a rough timing phase, and when enough evidence exists,
-              a broad post-use intensity description. It never tells you how much to take next.
+              Put in what was <b>already taken</b> and how it was used. The calculator handles the boring math,
+              gives a rough idea of where the experience may be in time, and only adds an intensity label when the evidence is solid enough to make one useful.
+              It does not work backwards into a “take this much” answer.
             </div>
 
             <div class="post-grid">
               <div class="field">
-                <label for="postAmount">Amount already taken</label>
+                <label for="postAmount">Amount taken</label>
                 <input id="postAmount" type="number" min="0" step="0.001" value="1" inputmode="decimal">
               </div>
 
@@ -467,12 +467,12 @@
               </div>
 
               <div class="field">
-                <label for="postMethod">Method used</label>
+                <label for="postMethod">How it was taken</label>
                 <select id="postMethod"></select>
               </div>
 
               <div class="field">
-                <label for="postMinutes">Minutes since taken (optional)</label>
+                <label for="postMinutes">Minutes since taking it</label>
                 <div class="inputrow">
                   <input id="postMinutes" type="number" min="0" step="1" placeholder="optional" inputmode="numeric">
                   <div class="unit">min</div>
@@ -480,7 +480,7 @@
               </div>
 
               <div class="field">
-                <label for="postWeight">Body weight (optional)</label>
+                <label for="postWeight">Weight, if useful</label>
                 <div class="inputrow">
                   <input id="postWeight" type="number" min="1" step="0.1" placeholder="optional" inputmode="decimal">
                   <div class="unit">lb</div>
@@ -488,18 +488,18 @@
               </div>
 
               <div class="field">
-                <label>Current compound</label>
+                <label>Selected compound</label>
                 <input id="postCompound" type="text" value="" readonly aria-readonly="true">
               </div>
             </div>
 
             <div class="derived-fields" id="countFields" hidden>
               <div class="field">
-                <label for="perUnitAmount">Known active amount per unit</label>
+                <label for="perUnitAmount">Known active amount in each unit</label>
                 <input id="perUnitAmount" type="number" min="0" step="0.001" placeholder="optional">
               </div>
               <div class="field">
-                <label for="perUnitUnit">Per-unit active amount unit</label>
+                <label for="perUnitUnit">Unit for that active amount</label>
                 <select id="perUnitUnit">
                   <option value="mg">mg</option>
                   <option value="ug">µg</option>
@@ -509,7 +509,7 @@
 
             <div class="derived-fields" id="liquidFieldsUniversal" hidden>
               <div class="field">
-                <label for="concentration">Known concentration</label>
+                <label for="concentration">Known strength / concentration</label>
                 <input id="concentration" type="number" min="0" step="0.001" placeholder="optional">
               </div>
               <div class="field">
@@ -550,14 +550,14 @@
             <div class="post-phase" id="postPhase" hidden></div>
 
             <div class="post-warning">
-              This is not a green light to redose. Natural products can vary in potency, research chemicals may be mislabeled,
-              and combinations can make a single-drug estimate much less reliable.
+              This is a snapshot, not permission to add more. Natural material can vary a lot, research chemicals can be mislabeled,
+              and combinations can make a tidy single-drug estimate fall apart quickly.
             </div>
           </div>
         </section>
 
         <section class="calc" id="dxmCalc" hidden>
-          <div class="calc-head"><h3>DXM known-amount calculator</h3></div>
+          <div class="calc-head"><h3>DXM amount check</h3></div>
           <div class="calc-body">
             <div class="calc-note">
               This is the one place the site does formulation math. It interprets an amount already taken or already being checked.
@@ -687,7 +687,7 @@ const DATA = {
       ["Identity","Do not identify wild mushrooms from vibe or a single photo. Toxic look-alikes are a separate poisoning problem."],
       ["Movement","Driving, traffic, heights, and water are poor matches for impaired perception."]
     ],
-    red:"<b>More concerning:</b> seizure, collapse, inability to wake, severe chest pain, very high temperature, dangerous agitation, or suspected poisonous-mushroom exposure."
+    red:"<b>Outside the usual lane:</b> seizure, collapse, inability to wake, severe chest pain, very high temperature, dangerous agitation, or suspected poisonous-mushroom exposure."
   },
 
   cannabis:{
@@ -718,7 +718,7 @@ const DATA = {
       ["Product","HHC, delta-8, delta-9, and mixed products are not interchangeable just because the package says hemp."],
       ["Coordination","Driving, cooking, bikes, stairs, and water activities deserve extra caution."]
     ],
-    red:"<b>More concerning:</b> collapse, seizure, trouble breathing, severe chest pain, or persistent vomiting with inability to keep fluids down."
+    red:"<b>Worth taking seriously:</b> collapse, seizure, trouble breathing, severe chest pain, or persistent vomiting with inability to keep fluids down."
   },
 
   dmt:{
@@ -750,7 +750,7 @@ const DATA = {
       ["MAOI distinction","Ayahuasca-style preparations have a different interaction profile from inhaled DMT."],
       ["Environment","Avoid edges, traffic, flames, and water."]
     ],
-    red:"<b>More concerning:</b> seizure, collapse, trouble breathing, severe chest pain, very high temperature, or prolonged unresponsiveness."
+    red:"<b>This is different from ordinary intoxication:</b> seizure, collapse, trouble breathing, severe chest pain, very high temperature, or prolonged unresponsiveness."
   },
 
   lysergamides:{
@@ -784,7 +784,7 @@ const DATA = {
       ["Identity","Blotter art cannot verify the compound."],
       ["Setting","Anxious surroundings can become disproportionately important."]
     ],
-    red:"<b>More concerning:</b> seizure, collapse, dangerously high temperature, severe chest pain, violent/uncontrollable agitation, or prolonged unresponsiveness."
+    red:"<b>Red-flag territory:</b> seizure, collapse, dangerously high temperature, severe chest pain, violent/uncontrollable agitation, or prolonged unresponsiveness."
   },
 
   mdma:{
@@ -813,7 +813,7 @@ const DATA = {
       ["Fluids","Both dehydration and excessive water intake can be harmful."],
       ["Serotonin","Other serotonergic drugs and some medications can increase serotonin-toxicity risk."]
     ],
-    red:"<b>More concerning:</b> very high temperature, severe confusion, collapse, seizure, severe chest pain, rigid muscles with worsening agitation, or inability to respond normally."
+    red:"<b>Outside the usual lane:</b> very high temperature, severe confusion, collapse, seizure, severe chest pain, rigid muscles with worsening agitation, or inability to respond normally."
   },
 
   rc:{
@@ -844,7 +844,7 @@ const DATA = {
       ["No cross-drug conversions","A milligram amount ordinary for one compound can be enormous for another."],
       ["Keep packaging","Compound names and packaging can be useful information if medical care becomes necessary."]
     ],
-    red:"<b>More concerning:</b> any severe or rapidly worsening reaction, especially collapse, seizure, trouble breathing, very high temperature, severe chest pain, or profound unresponsiveness."
+    red:"<b>Worth taking seriously:</b> any severe or rapidly worsening reaction, especially collapse, seizure, trouble breathing, very high temperature, severe chest pain, or profound unresponsiveness."
   },
 
   "2cx":{
@@ -878,7 +878,7 @@ const DATA = {
       ["Identity","Testing matters especially with powders and pressed tablets."],
       ["Stimulation","Heat and exertion can feel rougher with a stimulating psychedelic."]
     ],
-    red:"<b>More concerning:</b> seizure, collapse, severe chest pain, dangerously high temperature, severe agitation, or unexpectedly intense effects from an unknown product."
+    red:"<b>This is different from ordinary intoxication:</b> seizure, collapse, severe chest pain, dangerously high temperature, severe agitation, or unexpectedly intense effects from an unknown product."
   },
 
   dissociatives:{
@@ -909,7 +909,7 @@ const DATA = {
       ["Depressants","Alcohol, opioids, benzodiazepines, and other depressants can worsen sedation and airway risk."],
       ["Identity","PCP analogues and research dissociatives can differ dramatically in potency and duration."]
     ],
-    red:"<b>More concerning:</b> trouble breathing, repeated vomiting while deeply sedated, collapse, seizure, severe agitation, very high temperature, or inability to wake."
+    red:"<b>Red-flag territory:</b> trouble breathing, repeated vomiting while deeply sedated, collapse, seizure, severe agitation, very high temperature, or inability to wake."
   },
 
   dxm:{
@@ -938,7 +938,7 @@ const DATA = {
       ["Formulation","HBr, freebase, and polistirex are not the same milligram label."],
       ["Serotonin","DXM has serotonergic effects, so some medication and drug combinations can increase serotonin-toxicity risk."]
     ],
-    red:"<b>More concerning:</b> trouble breathing, collapse, seizure, very high temperature, rapidly worsening severe confusion, or inability to wake."
+    red:"<b>Outside the usual lane:</b> trouble breathing, collapse, seizure, very high temperature, rapidly worsening severe confusion, or inability to wake."
   },
 
   nootropics:{
@@ -968,7 +968,7 @@ const DATA = {
       ["Overlap","Caffeine and other stimulants can quietly stack across multiple products."],
       ["Claims","Natural, focus, mushroom, adaptogen, and nootropic do not guarantee safety or effectiveness."]
     ],
-    red:"<b>More concerning:</b> severe chest pain, fainting, seizure, trouble breathing, very high temperature, severe agitation, or rapidly worsening confusion."
+    red:"<b>Worth taking seriously:</b> severe chest pain, fainting, seizure, trouble breathing, very high temperature, severe agitation, or rapidly worsening confusion."
   }
 };
 
@@ -999,7 +999,7 @@ const DERIVATIVE_PROFILES = {
       uncertainty:"little controlled human pharmacokinetic or safety data",
       note:"A 4-hydroxy tryptamine related to psilocin, but not a psilocybin dose-equivalent.",
       comparison:"Community reports often emphasize visuals more than emotional depth compared with psilocybin. That is a report pattern, not a clinical rule.",
-      routes:{"Oral":"Gradual psychedelic onset.|Several-hour course is commonly reported.|Sparse human data make precise timing uncertain.","Other / unknown route":"Insufficient reliable route data.|Unknown.|Avoid route-equivalence assumptions."}
+      routes:{"Oral":"Gradual psychedelic onset.|Several-hour course is commonly reported.|Sparse human data make precise timing uncertain.","Other / unknown route":"Insufficient reliable route data.|Unknown.|Route-equivalence assumptions are shaky here."}
     },
     "4-AcO-MET":{
       evidence:["low","Structure-activity/preclinical evidence plus community reports."],
@@ -1008,7 +1008,7 @@ const DERIVATIVE_PROFILES = {
       uncertainty:"very little controlled human evidence",
       note:"Treat as its own compound rather than 'the same as 4-HO-MET with a different strength.'",
       comparison:"The acetoxy/hydroxy relationship supports biochemical similarity, not a reliable potency conversion.",
-      routes:{"Oral":"Gradual psychedelic onset.|Multi-hour course is reported.|Sparse human data and product identity are the main uncertainties.","Other / unknown route":"Insufficient reliable route data.|Unknown.|Do not infer route-equivalent amounts."}
+      routes:{"Oral":"Gradual psychedelic onset.|Multi-hour course is reported.|Sparse human data and product identity are the main uncertainties.","Other / unknown route":"Insufficient reliable route data.|Unknown.|There is no dependable route-equivalence shortcut here."}
     },
     "4-HO-MiPT (miprocin)":{
       evidence:["low","Limited pharmacology plus qualitative/community reports."],
@@ -1064,7 +1064,7 @@ const DERIVATIVE_PROFILES = {
       uncertainty:"controlled human data are sparse",
       note:"DiPT is not 5-MeO-DiPT; the 5-methoxy substitution changes the profile.",
       comparison:"Compared with N,N-DMT, the hallmark reports are more auditory than immersive visual.",
-      routes:{"Oral":"Gradual psychedelic onset.|Several-hour course is reported.|Auditory distortion can affect communication and environmental awareness.","Other / unknown route":"Insufficient reliable route data.|Unknown.|Avoid route-equivalence assumptions."}
+      routes:{"Oral":"Gradual psychedelic onset.|Several-hour course is reported.|Auditory distortion can affect communication and environmental awareness.","Other / unknown route":"Insufficient reliable route data.|Unknown.|Route-equivalence assumptions are shaky here."}
     }
   },
 
@@ -1077,7 +1077,7 @@ const DERIVATIVE_PROFILES = {
       uncertainty:"human evidence is much smaller than for LSD itself",
       note:"Human samples detected LSD after 1P-LSD administration, supporting prodrug-like behavior.",
       comparison:"The prodrug evidence supports LSD-like pharmacology, but not a claim that every timing or potency detail is identical.",
-      routes:{"Oral / blotter":"Gradual lysergamide onset.|Long-lasting.|Analogue identity should be verified where possible.","Sublingual / buccal":"Still a prolonged lysergamide route.|Long-lasting.|Do not use route as a shortcut to infer an equivalent amount."}
+      routes:{"Oral / blotter":"Gradual lysergamide onset.|Long-lasting.|Analogue identity should be verified where possible.","Sublingual / buccal":"Still a prolonged lysergamide route.|Long-lasting.|Route changes are not a trustworthy way to infer an equivalent amount."}
     },
     "1cP-LSD":{
       evidence:["mid","Human-serum conversion evidence plus analytical/preclinical work; limited direct human effects data."],
@@ -1114,7 +1114,7 @@ const DERIVATIVE_PROFILES = {
       note:"Distinct active lysergamide; do not use LSD safety assumptions to dismiss severe symptoms.",
       comparison:"A recent confirmed case involved severe agitation, unconsciousness, injury and persistent psychosis, so 'LSD analogue' should not be read as 'same toxicity profile.'",
       routes:{"Oral / blotter":"Gradual lysergamide onset.|Long-lasting.|Do not use LSD assumptions to normalize unexpectedly severe symptoms."},
-      red:"<b>More concerning:</b> severe agitation, loss of consciousness, traumatic injury, seizure, collapse, very high temperature, or prolonged psychotic symptoms."
+      red:"<b>This is different from ordinary intoxication:</b> severe agitation, loss of consciousness, traumatic injury, seizure, collapse, very high temperature, or prolonged psychotic symptoms."
     },
     "LSZ":{
       evidence:["low","Preclinical LSD-like activity plus limited human reports."],
@@ -1144,10 +1144,10 @@ const DERIVATIVE_PROFILES = {
     "2C-C":{evidence:["low","Sparse human reports and designer-drug literature."],lead:"2C-C is a chloro-substituted 2C-series phenethylamine with limited controlled human research.",character:"often described as gentler or more sedating than some relatives, but this is anecdotal",uncertainty:"little controlled human pharmacology",note:"Community descriptions such as 'gentler' are not clinical safety labels.",comparison:"2C-C is a distinct compound, not a lower-strength 2C-B.",routes:{"Oral":"Gradual onset.|Several-hour psychedelic course is reported.|Limited evidence makes exact timing approximate."}},
     "2C-D":{evidence:["low","Designer-drug metabolism/review literature plus limited human reports."],lead:"2C-D is a methyl-substituted 2C phenethylamine with limited modern controlled human data.",character:"psychedelic, often described as comparatively clear or mild in some reports",uncertainty:"human pharmacology remains thin",note:"Do not treat community nicknames as a safety assessment.",comparison:"2C-D is a distinct drug, not a formulation of 2C-B.",routes:{"Oral":"Gradual onset.|Several-hour course reported.|Sparse data make exact timing approximate."}},
     "2C-E":{evidence:["high","Small human observational pharmacology study."],lead:"2C-E is a psychedelic phenethylamine with documented visual, subjective and cardiovascular effects in human observational research.",character:"often described as deeper, heavier and more demanding than 2C-B",uncertainty:"small human samples and limited broader safety data",note:"Human data exist, but sample sizes are small.",comparison:"Do not use 2C-B as a potency or psychological-depth template for 2C-E.",routes:{"Oral":"Gradual psychedelic development.|Several-hour course documented in human observation.|Body load and cardiovascular stimulation can be more noticeable."}},
-    "2C-I":{evidence:["low","Toxicology/review literature plus community reports."],lead:"2C-I is an iodinated 2C-series psychedelic phenethylamine. Modern controlled human pharmacology is limited.",character:"visual, stimulating, psychedelic",uncertainty:"limited controlled human data",note:"2C-I is not 25I-NBOMe.",comparison:"25I-NBOMe is an N-benzyl derivative with much higher receptor affinity and a more concerning toxicity history.",routes:{"Oral":"Gradual psychedelic/stimulant onset.|Multi-hour course is reported.|Sparse controlled data and stimulant body load are key uncertainties.","Other / unknown":"Insufficient reliable route data.|Unknown.|No generic route-equivalence calculation."}},
+    "2C-I":{evidence:["low","Toxicology/review literature plus community reports."],lead:"2C-I is an iodinated 2C-series psychedelic phenethylamine. Modern controlled human pharmacology is limited.",character:"visual, stimulating, psychedelic",uncertainty:"limited controlled human data",note:"2C-I is not 25I-NBOMe.",comparison:"25I-NBOMe is an N-benzyl derivative with much higher receptor affinity and a more concerning toxicity history.",routes:{"Oral":"Gradual psychedelic/stimulant onset.|Multi-hour course is reported.|Sparse controlled data and stimulant body load are key uncertainties.","Other / unknown":"Insufficient reliable route data.|Unknown.|There is no useful generic route conversion."}},
     "2C-T-2":{evidence:["low","Designer-drug literature plus case/experience reports."],lead:"2C-T-2 is a sulfur-containing 2C-series psychedelic with sparse controlled human data.",character:"psychedelic, visual, body-heavy in some reports",uncertainty:"sparse modern human safety data",note:"The 2C-T subgroup should not borrow 2C-B safety assumptions.",comparison:"2C-T-2 and 2C-T-7 are different compounds with a thinner safety evidence base than 2C-B.",routes:{"Oral":"Gradual onset.|Multi-hour course reported.|Body load and toxicology uncertainty deserve more attention."}},
-    "2C-T-7":{evidence:["low","Case/toxicology literature and designer-drug reviews."],lead:"2C-T-7 is a sulfur-containing psychedelic phenethylamine with documented severe toxicity in the broader clinical literature.",character:"psychedelic, visual, potentially body-heavy",uncertainty:"limited controlled human data and a more concerning toxicity history",note:"Do not treat it as another cosmetic 2C variant.",comparison:"The 2C-T compounds have a different evidence and toxicity picture from better-studied 2C-B.",routes:{"Oral":"Gradual onset.|Multi-hour course reported.|Severe symptoms should not be normalized as ordinary 2C body load."},red:"<b>More concerning:</b> seizure, collapse, severe chest pain, very high temperature, severe agitation, or rapidly worsening confusion."},
-    "25I-NBOMe / NBOMe family":{evidence:["mid","Toxicology case series/reviews plus receptor pharmacology."],lead:"NBOMe compounds are N-benzyl derivatives of 2C-type phenethylamines with extremely high 5-HT2A affinity and a documented record of severe toxicity and fatalities.",character:"intensely psychedelic, stimulating, potentially vasoconstrictive",uncertainty:"identity and tiny active quantities make mislabeling especially dangerous",note:"NBOMe/NBOH compounds are deliberately separated from ordinary 2C-x compounds.",comparison:"25I-NBOMe is not 'strong 2C-I.' N-benzyl substitution markedly increases 5-HT2A affinity and changes practical risk.",routes:{"Blotter / buccal exposure":"Can develop relatively quickly depending on compound and route.|Often multi-hour.|Tiny active quantities and misrepresented blotter make identity and measurement major risks.","Unknown route / product":"Route and compound-specific timing vary.|Unknown.|Do not apply 2C-x route or amount expectations."},effects:[["Vision","Strong geometric and color effects."],["Body","Vasoconstriction, tachycardia, hypertension, agitation and temperature elevation can occur."],["Mind","Intense psychedelic cognition, anxiety and confusion."],["Toxicity","Seizures, hyperthermia and rhabdomyolysis are documented in severe cases."]],calm:"<b>This is not a family where severe physical symptoms should be normalized as psychedelic body load.</b>",anchors:[["Identity","Blotter sold as LSD has sometimes contained NBOMe compounds."],["Potency","Do not use 2C-I or LSD amount logic."],["Toxicology","Severe vasoconstriction, hyperthermia and seizures have been reported."]],red:"<b>More concerning:</b> seizure, marked vasoconstriction, severe chest pain, very high temperature, severe agitation, collapse, or rapidly worsening confusion."}
+    "2C-T-7":{evidence:["low","Case/toxicology literature and designer-drug reviews."],lead:"2C-T-7 is a sulfur-containing psychedelic phenethylamine with documented severe toxicity in the broader clinical literature.",character:"psychedelic, visual, potentially body-heavy",uncertainty:"limited controlled human data and a more concerning toxicity history",note:"Do not treat it as another cosmetic 2C variant.",comparison:"The 2C-T compounds have a different evidence and toxicity picture from better-studied 2C-B.",routes:{"Oral":"Gradual onset.|Multi-hour course reported.|Severe symptoms should not be normalized as ordinary 2C body load."},red:"<b>Red-flag territory:</b> seizure, collapse, severe chest pain, very high temperature, severe agitation, or rapidly worsening confusion."},
+    "25I-NBOMe / NBOMe family":{evidence:["mid","Toxicology case series/reviews plus receptor pharmacology."],lead:"NBOMe compounds are N-benzyl derivatives of 2C-type phenethylamines with extremely high 5-HT2A affinity and a documented record of severe toxicity and fatalities.",character:"intensely psychedelic, stimulating, potentially vasoconstrictive",uncertainty:"identity and tiny active quantities make mislabeling especially dangerous",note:"NBOMe/NBOH compounds are deliberately separated from ordinary 2C-x compounds.",comparison:"25I-NBOMe is not 'strong 2C-I.' N-benzyl substitution markedly increases 5-HT2A affinity and changes practical risk.",routes:{"Blotter / buccal exposure":"Can develop relatively quickly depending on compound and route.|Often multi-hour.|Tiny active quantities and misrepresented blotter make identity and measurement major risks.","Unknown route / product":"Route and compound-specific timing vary.|Unknown.|Do not apply 2C-x route or amount expectations."},effects:[["Vision","Strong geometric and color effects."],["Body","Vasoconstriction, tachycardia, hypertension, agitation and temperature elevation can occur."],["Mind","Intense psychedelic cognition, anxiety and confusion."],["Toxicity","Seizures, hyperthermia and rhabdomyolysis are documented in severe cases."]],calm:"<b>This is not a family where severe physical symptoms should be normalized as psychedelic body load.</b>",anchors:[["Identity","Blotter sold as LSD has sometimes contained NBOMe compounds."],["Potency","Do not use 2C-I or LSD amount logic."],["Toxicology","Severe vasoconstriction, hyperthermia and seizures have been reported."]],red:"<b>Outside the usual lane:</b> seizure, marked vasoconstriction, severe chest pain, very high temperature, severe agitation, collapse, or rapidly worsening confusion."}
   }
 };
 
@@ -1726,11 +1726,11 @@ function calculatePostUse(){
 
   if(label){
     intensity.textContent=label;
-    evidence.textContent="rough post-use context";
+    evidence.textContent="rough after-the-fact context";
     body.textContent=intensityCopy(label,currentKey)+" "+meta.note;
   }else{
-    intensity.textContent="No reliable intensity grade";
-    evidence.textContent="timing + math still work";
+    intensity.textContent="Not enough data for a trustworthy intensity label";
+    evidence.textContent="timing and math only";
     body.textContent=meta.note;
   }
 
@@ -1802,7 +1802,7 @@ function calculateDXM(){
   if(dxmForm==="hbr") note=fmt(mg,1)+" mg HBr ≈ "+fmt(freeEq,1)+" mg freebase equivalent.";
   if(dxmForm==="freebase") note=fmt(mg,1)+" mg freebase ≈ "+fmt(hbrEq,1)+" mg HBr-equivalent.";
   if(dxmForm==="polistirex") note="Polistirex is interpreted using the HBr-equivalent amount printed on the label. Extended release makes immediate-release plateau timing a rough fit.";
-  document.getElementById("dxmOutput").textContent=band[2]+". "+note+" This describes an already-known amount; it is not a target.";
+  document.getElementById("dxmOutput").textContent=band[2]+". "+note+" This only describes the amount entered. It is not a target.";
 }
 
 document.getElementById("postAmount").addEventListener("input",calculatePostUse);
