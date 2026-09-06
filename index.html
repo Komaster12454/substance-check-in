@@ -144,6 +144,129 @@
   .side-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.58}
   .black{background:#1a1917;color:#fff}
   .black p{color:#ddd6ca}
+
+  .post-calc{
+    margin-top:18px;
+    border:3px solid var(--line);
+    background:#fff;
+  }
+  .post-calc-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:13px 14px;
+    border-bottom:3px solid var(--line);
+    background:#f3e8cf;
+  }
+  .post-calc-head h3{
+    margin:0;
+    font:900 20px Georgia,"Times New Roman",serif;
+  }
+  .post-calc-head span{
+    font-size:10px;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.055em;
+  }
+  .post-calc-body{padding:14px}
+  .post-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+  .post-grid .field{min-width:0}
+  .inline-note{
+    margin-top:10px;
+    font-size:11px;
+    color:var(--muted);
+    line-height:1.5;
+  }
+  .derived-fields{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+  }
+  .derived-fields[hidden]{display:none}
+  .post-results{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    border:2px solid var(--line);
+    margin-top:13px;
+    background:#fff;
+  }
+  .post-result{
+    padding:10px;
+    min-width:0;
+  }
+  .post-result + .post-result{border-left:2px solid var(--line)}
+  .post-result small{
+    display:block;
+    margin-bottom:3px;
+    font-size:9px;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--muted);
+  }
+  .post-result strong{
+    display:block;
+    font:900 16px/1.15 Georgia,"Times New Roman",serif;
+    overflow-wrap:anywhere;
+  }
+  .post-intensity{
+    margin-top:11px;
+    border:3px solid var(--line);
+    background:#fff8d7;
+  }
+  .post-intensity-top{
+    padding:11px 12px;
+    border-bottom:2px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:center;
+  }
+  .post-intensity-top strong{
+    font:900 18px Georgia,"Times New Roman",serif;
+  }
+  .post-intensity-top span{
+    font-size:10px;
+    text-transform:uppercase;
+    font-weight:900;
+    letter-spacing:.05em;
+  }
+  .post-intensity-body{
+    padding:12px;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.55;
+  }
+  .post-phase{
+    margin-top:10px;
+    border:2px dashed var(--line);
+    background:#f8fbff;
+    padding:11px;
+    font-size:12px;
+    line-height:1.5;
+    color:var(--muted);
+  }
+  .post-phase[hidden]{display:none}
+  .post-warning{
+    margin-top:10px;
+    border:2px solid var(--red);
+    background:var(--softred);
+    color:#76221d;
+    padding:10px;
+    font-size:11px;
+    line-height:1.5;
+  }
+  @media(max-width:560px){
+    .post-grid,.derived-fields,.post-results{grid-template-columns:1fr}
+    .post-result + .post-result{border-left:0;border-top:2px solid var(--line)}
+  }
+
   .calc{
     margin-top:18px;border:3px solid var(--line);background:#fff
   }
@@ -310,6 +433,127 @@
 
         <section class="block">
           <div class="redflag" id="redflag"></div>
+        </section>
+
+
+        <section class="post-calc" id="postCalc">
+          <div class="post-calc-head">
+            <h3>Already-taken calculator</h3>
+            <span>after-the-fact context</span>
+          </div>
+
+          <div class="post-calc-body">
+            <div class="calc-note">
+              Enter the amount you <b>already took</b> and the method you used.
+              The result gives unit math, a rough timing phase, and when enough evidence exists,
+              a broad post-use intensity description. It never tells you how much to take next.
+            </div>
+
+            <div class="post-grid">
+              <div class="field">
+                <label for="postAmount">Amount already taken</label>
+                <input id="postAmount" type="number" min="0" step="0.001" value="1" inputmode="decimal">
+              </div>
+
+              <div class="field">
+                <label for="postUnit">Amount unit</label>
+                <select id="postUnit">
+                  <option value="mg">mg active drug</option>
+                  <option value="ug">µg active drug</option>
+                  <option value="g">g material / drug</option>
+                  <option value="count">count / units</option>
+                  <option value="ml">mL liquid</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="postMethod">Method used</label>
+                <select id="postMethod"></select>
+              </div>
+
+              <div class="field">
+                <label for="postMinutes">Minutes since taken (optional)</label>
+                <div class="inputrow">
+                  <input id="postMinutes" type="number" min="0" step="1" placeholder="optional" inputmode="numeric">
+                  <div class="unit">min</div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="postWeight">Body weight (optional)</label>
+                <div class="inputrow">
+                  <input id="postWeight" type="number" min="1" step="0.1" placeholder="optional" inputmode="decimal">
+                  <div class="unit">lb</div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Current compound</label>
+                <input id="postCompound" type="text" value="" readonly aria-readonly="true">
+              </div>
+            </div>
+
+            <div class="derived-fields" id="countFields" hidden>
+              <div class="field">
+                <label for="perUnitAmount">Known active amount per unit</label>
+                <input id="perUnitAmount" type="number" min="0" step="0.001" placeholder="optional">
+              </div>
+              <div class="field">
+                <label for="perUnitUnit">Per-unit active amount unit</label>
+                <select id="perUnitUnit">
+                  <option value="mg">mg</option>
+                  <option value="ug">µg</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="derived-fields" id="liquidFieldsUniversal" hidden>
+              <div class="field">
+                <label for="concentration">Known concentration</label>
+                <input id="concentration" type="number" min="0" step="0.001" placeholder="optional">
+              </div>
+              <div class="field">
+                <label for="concentrationUnit">Concentration unit</label>
+                <select id="concentrationUnit">
+                  <option value="mgml">mg / mL</option>
+                  <option value="mg5ml">mg / 5 mL</option>
+                  <option value="ugml">µg / mL</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="inline-note" id="postMethodNote"></div>
+
+            <div class="post-results">
+              <div class="post-result">
+                <small>entered</small>
+                <strong id="postEntered">1 mg</strong>
+              </div>
+              <div class="post-result">
+                <small>active amount</small>
+                <strong id="postActive">1 mg</strong>
+              </div>
+              <div class="post-result">
+                <small>mg/kg math</small>
+                <strong id="postMgKg">optional</strong>
+              </div>
+            </div>
+
+            <div class="post-intensity">
+              <div class="post-intensity-top">
+                <strong id="postIntensity">Amount context</strong>
+                <span id="postEvidence">post-use only</span>
+              </div>
+              <div class="post-intensity-body" id="postIntensityBody"></div>
+            </div>
+
+            <div class="post-phase" id="postPhase" hidden></div>
+
+            <div class="post-warning">
+              This is not a green light to redose. Natural products can vary in potency, research chemicals may be mislabeled,
+              and combinations can make a single-drug estimate much less reliable.
+            </div>
+          </div>
         </section>
 
         <section class="calc" id="dxmCalc" hidden>
@@ -1018,6 +1262,7 @@ function updateDerivative(){
     const o=document.createElement("option");o.value=name;o.textContent=name;route.appendChild(o);
   });
   updateRoute();
+  configurePostCalculator();
 }
 
 function updateRoute(){
@@ -1030,11 +1275,478 @@ function updateRoute(){
   document.getElementById("onset").textContent=onset;
   document.getElementById("duration").textContent=duration;
   document.getElementById("routeRisk").textContent=risk;
+  const postMethod=document.getElementById("postMethod");
+  if(postMethod && [...postMethod.options].some(o=>o.value===key)){
+    postMethod.value=key;
+    calculatePostUse();
+  }
 }
 
 tabs.forEach(btn=>btn.addEventListener("click",()=>renderProfile(btn.dataset.key)));
 document.getElementById("derivative").addEventListener("change",updateDerivative);
 document.getElementById("route").addEventListener("change",updateRoute);
+
+
+// Universal after-the-fact calculator.
+// The thresholds below are used only to classify an amount the user says they already took.
+// The UI deliberately does not expose them as a target-dose table.
+const POST_USE_META = {
+  psilocybin: {
+    "Psilocybin mushrooms": {
+      defaultUnit:"g",
+      classifyUnit:"g",
+      bands:[
+        [0.5,"Very light / threshold-ish"],
+        [1.5,"Light"],
+        [3.0,"Clear psychedelic range"],
+        [5.0,"Strong"],
+        [Infinity,"Very strong / highly variable"]
+      ],
+      note:"For whole mushrooms, grams describe mushroom material, not pure psilocybin. Potency can vary substantially. Lemon tek/tea changes the timing context here, not the gram classification."
+    },
+    "4-AcO-DMT (psilacetin)": {
+      defaultUnit:"mg",
+      classifyUnit:null,
+      note:"4-AcO-DMT has too little controlled human dose-response work for this site to pretend an exact intensity band is clinically validated. The calculator still handles amount, timing, and route context."
+    },
+    "4-HO-MET (metocin)": {
+      defaultUnit:"mg", classifyUnit:null,
+      note:"Human controlled dose-response data are sparse. Amount math and timing work, but the site will not manufacture a precise intensity scale from trip reports."
+    },
+    "4-AcO-MET": {
+      defaultUnit:"mg", classifyUnit:null,
+      note:"Direct human evidence is sparse, so amount-based intensity classification stays disabled while timing and unit math remain available."
+    },
+    "4-HO-MiPT (miprocin)": {
+      defaultUnit:"mg", classifyUnit:null,
+      note:"Direct human evidence is sparse, so timing and amount math are shown without an invented intensity ladder."
+    }
+  },
+
+  dmt: {
+    "N,N-DMT": {
+      defaultUnit:"mg",
+      classifyUnit:null,
+      note:"Inhaled DMT intensity depends heavily on delivery technique and absorption, so this calculator does not turn milligrams into a reliable 'breakthrough' score. It does give route-specific timing."
+    },
+    "5-MeO-DMT": {
+      defaultUnit:"mg", classifyUnit:null,
+      note:"5-MeO-DMT has a steep, route-sensitive effect profile. This site intentionally avoids giving an amount-based intensity ladder and focuses on timing and warning context."
+    },
+    "Bufotenine (5-HO-DMT)": {
+      defaultUnit:"mg", classifyUnit:null,
+      note:"Modern controlled human dose-response data are limited."
+    },
+    "5-MeO-MiPT (moxy)": {
+      defaultUnit:"mg", classifyUnit:null,
+      note:"Controlled human dose-response data are too sparse for a trustworthy intensity band."
+    },
+    "DiPT": {
+      defaultUnit:"mg", classifyUnit:null,
+      note:"Controlled human dose-response data are sparse; the calculator focuses on timing and amount math."
+    },
+    "Ayahuasca-style DMT + MAOI": {
+      defaultUnit:"ml", classifyUnit:null,
+      note:"Ayahuasca-style preparations vary in DMT and beta-carboline content, so liquid volume alone is not a drug dose. Enter a known concentration only if you actually have one."
+    }
+  },
+
+  lysergamides: {
+    "LSD": {
+      defaultUnit:"ug",
+      classifyUnit:"ug",
+      bands:[
+        [40,"Threshold / very light"],
+        [80,"Light"],
+        [150,"Clear psychedelic range"],
+        [250,"Strong"],
+        [Infinity,"Very strong"]
+      ],
+      note:"This is a broad post-use LSD context, not a potency guarantee. Blotter strength is frequently uncertain unless analytically measured."
+    },
+    "1P-LSD": {
+      defaultUnit:"ug",
+      classifyUnit:"ug",
+      bands:[
+        [40,"Threshold / very light"],
+        [80,"Light"],
+        [150,"Clear psychedelic range"],
+        [250,"Strong"],
+        [Infinity,"Very strong"]
+      ],
+      note:"1P-LSD can convert to LSD in vivo, but equal micrograms are not presented here as a guaranteed one-to-one subjective equivalence."
+    },
+    "1cP-LSD": {
+      defaultUnit:"ug", classifyUnit:null,
+      note:"Prodrug-like conversion evidence exists, but direct controlled human dose-response data are limited."
+    },
+    "ALD-52 (1A-LSD)": {
+      defaultUnit:"ug", classifyUnit:null,
+      note:"LSD-like behavior is plausible, but the site avoids pretending there is a validated exact intensity ladder."
+    },
+    "AL-LAD": {
+      defaultUnit:"ug", classifyUnit:null,
+      note:"AL-LAD is a distinct active lysergamide. LSD dose bands should not be copied onto it."
+    },
+    "ETH-LAD": {
+      defaultUnit:"ug", classifyUnit:null,
+      note:"Sparse human data and a documented severe toxicity case make a simplistic intensity ladder inappropriate."
+    },
+    "LSZ": {
+      defaultUnit:"ug", classifyUnit:null,
+      note:"Human dose-response evidence is sparse."
+    },
+    "LSA / ergine": {
+      defaultUnit:"count", classifyUnit:null,
+      note:"Seed count is not converted into LSA milligrams because alkaloid content varies substantially between seeds and products."
+    }
+  },
+
+  "2cx": {
+    "2C-B": {
+      defaultUnit:"mg",
+      classifyUnit:"mg",
+      bands:[
+        [8,"Very light / threshold-ish"],
+        [15,"Light"],
+        [25,"Clear psychedelic range"],
+        [35,"Strong"],
+        [Infinity,"Very strong"]
+      ],
+      note:"Broad post-use context only. Different routes are not treated as milligram-equivalent."
+    },
+    "2C-C": {defaultUnit:"mg",classifyUnit:null,note:"Controlled human dose-response evidence is sparse."},
+    "2C-D": {defaultUnit:"mg",classifyUnit:null,note:"Controlled human dose-response evidence is sparse."},
+    "2C-E": {defaultUnit:"mg",classifyUnit:null,note:"A small human study exists, but the evidence base is too small for this site to present a confident recreational intensity ladder."},
+    "2C-I": {defaultUnit:"mg",classifyUnit:null,note:"Controlled human dose-response evidence is limited."},
+    "2C-T-2": {defaultUnit:"mg",classifyUnit:null,note:"Sparse human safety data make an amount-based intensity ladder inappropriate."},
+    "2C-T-7": {defaultUnit:"mg",classifyUnit:null,note:"Documented severe toxicity and sparse human data make a simple intensity ladder inappropriate."},
+    "25I-NBOMe / NBOMe family": {defaultUnit:"ug",classifyUnit:null,note:"NBOMe compounds have a narrow and dangerous margin with documented severe toxicity. This site will not grade an amount as 'safe' or 'normal.'"}
+  },
+
+  cannabis: {
+    "Delta-9 THC": {
+      defaultUnit:"mg",
+      classifyUnit:"mg",
+      routeLimited:true,
+      note:"For edibles, a known milligram THC label can be meaningful. For smoking/vaping, package milligrams do not equal the amount absorbed, so inhaled intensity classification is disabled."
+    },
+    "HHC": {defaultUnit:"mg",classifyUnit:null,note:"HHC products vary in isomer composition and potency; there is not a reliable universal THC-equivalent intensity scale."},
+    "Delta-8 THC": {defaultUnit:"mg",classifyUnit:null,note:"Product purity and potency vary, so this site avoids a fixed delta-8-to-delta-9 conversion."},
+    "Mixed hemp cannabinoids": {defaultUnit:"mg",classifyUnit:null,note:"A mixed-cannabinoid label is not enough to infer a meaningful intensity from milligrams alone."}
+  },
+
+  mdma: {
+    "MDMA": {
+      defaultUnit:"mg", classifyUnit:null,
+      note:"The calculator records and converts the amount and timing, but does not grade MDMA doses into a recreational target ladder. Heat, cardiovascular strain, hydration balance, and serotonin interactions matter more than a simple category."
+    },
+    "MDA": {
+      defaultUnit:"mg", classifyUnit:null,
+      note:"MDA is longer and more psychedelic than MDMA in many reports; it should not inherit MDMA dose categories."
+    },
+    "Unknown pressed tablet / powder": {
+      defaultUnit:"count", classifyUnit:null,
+      note:"Tablet count is not a drug dose unless the contents and active amount per tablet are actually known."
+    }
+  },
+
+  dissociatives: {
+    "Ketamine": {
+      defaultUnit:"mg", classifyUnit:null,
+      note:"Ketamine intensity is strongly route-dependent. This site gives route/timing context without turning intranasal, oral, IM, or IV amounts into one recreational scale."
+    },
+    "PCP": {defaultUnit:"mg",classifyUnit:null,note:"PCP has a long, stimulating, behaviorally unpredictable profile; a simple amount ladder would be misleading."},
+    "2-FDCK": {defaultUnit:"mg",classifyUnit:null,note:"Human dose-response data are sparse."},
+    "DCK (deschloroketamine)": {defaultUnit:"mg",classifyUnit:null,note:"Human dose-response data are sparse."},
+    "O-PCE": {defaultUnit:"mg",classifyUnit:null,note:"Human dose-response data are sparse."},
+    "DXM": {defaultUnit:"mg",classifyUnit:null,note:"Use the dedicated DXM formulation calculator below for HBr/freebase/polistirex and plateau context."}
+  },
+
+  dxm: {
+    "Dextromethorphan HBr": {defaultUnit:"mg",classifyUnit:null,note:"Use the dedicated DXM calculator below."},
+    "DXM freebase": {defaultUnit:"mg",classifyUnit:null,note:"Use the dedicated DXM calculator below."},
+    "Dextromethorphan polistirex": {defaultUnit:"mg",classifyUnit:null,note:"Use the dedicated DXM calculator below."}
+  },
+
+  nootropics: {
+    "Caffeine / stimulant blend": {defaultUnit:"mg",classifyUnit:null,note:"For mixed products, the actual ingredient list matters more than the marketing category."},
+    "Racetam-like product": {defaultUnit:"mg",classifyUnit:null,note:"Products and evidence vary; no universal nootropic intensity scale exists."},
+    "Herbal / mushroom blend": {defaultUnit:"mg",classifyUnit:null,note:"Mass of a blend does not tell you the amount of each active ingredient."},
+    "Multi-ingredient stack": {defaultUnit:"mg",classifyUnit:null,note:"Total blend milligrams are not a useful psychoactive intensity measure without ingredient-level amounts."}
+  },
+
+  rc: {
+    "Unknown powder / crystal": {defaultUnit:"mg",classifyUnit:null,note:"An unknown substance cannot be safely classified by amount alone."},
+    "Unknown blotter": {defaultUnit:"count",classifyUnit:null,note:"A blotter square is a delivery format, not a known drug dose."},
+    "Unknown pressed pill": {defaultUnit:"count",classifyUnit:null,note:"Pill count is not an active-drug amount unless the contents are verified."},
+    "Named research chemical": {defaultUnit:"mg",classifyUnit:null,note:"Use the exact compound profile when available rather than a generic RC intensity scale."}
+  }
+};
+
+function postMeta(){
+  const derivative=document.getElementById("derivative").value;
+  return (POST_USE_META[currentKey]||{})[derivative] || {
+    defaultUnit:"mg",
+    classifyUnit:null,
+    note:"This calculator can still summarize an already-taken amount and route timing, but no trustworthy compound-specific intensity ladder is available."
+  };
+}
+
+function prettyUnit(unit){
+  return unit==="ug" ? "µg" : unit;
+}
+
+function toMg(value,unit){
+  if(unit==="mg") return value;
+  if(unit==="ug") return value/1000;
+  if(unit==="g") return value*1000;
+  return null;
+}
+
+function fromMg(mg,unit){
+  if(unit==="mg") return mg;
+  if(unit==="ug") return mg*1000;
+  if(unit==="g") return mg/1000;
+  return null;
+}
+
+function routeTiming(key, derivative, route){
+  const r=(route||"").toLowerCase();
+
+  if(key==="psilocybin"){
+    if(r.includes("lemon")) return [15,45,150,300];
+    if(r.includes("tea")) return [20,60,180,330];
+    if(r.includes("chocolate")) return [45,120,270,420];
+    return [30,90,240,390];
+  }
+
+  if(key==="dmt"){
+    if(r.includes("inhaled") || r.includes("vapor")) return [1,5,15,35];
+    if(r.includes("maoi")) return [30,90,240,420];
+    if(r.includes("intranasal")) return [10,30,75,150];
+    return [15,60,180,360];
+  }
+
+  if(key==="lysergamides") return [30,90,300,720];
+
+  if(key==="2cx"){
+    if(r.includes("blotter") || r.includes("buccal")) return [15,60,180,420];
+    if(r.includes("other")) return [15,60,180,360];
+    return [30,90,240,420];
+  }
+
+  if(key==="cannabis"){
+    if(r.includes("edible") || r.includes("oral")) return [30,120,240,480];
+    return [2,15,90,240];
+  }
+
+  if(key==="mdma") return [30,90,240,420];
+
+  if(key==="dissociatives"){
+    if(r.includes("intranasal")) return [5,20,60,150];
+    if(r.includes("smoked") || r.includes("inhaled")) return [2,15,90,360];
+    if(r.includes("medical iv") || r.includes("im")) return [1,10,45,120];
+    return [20,60,180,420];
+  }
+
+  if(key==="dxm"){
+    if(r.includes("extended")) return [60,180,480,720];
+    return [30,90,240,480];
+  }
+
+  if(key==="nootropics") return [20,60,180,360];
+  return [20,60,180,360];
+}
+
+function phaseFor(minutes,t){
+  if(!Number.isFinite(minutes) || minutes<0 || !t) return null;
+  const [start,building,late,tail]=t;
+  if(minutes<start) return "Very early: this may still be before the usual onset window for the selected method.";
+  if(minutes<building) return "Come-up / building: effects may still be increasing.";
+  if(minutes<late) return "Active phase: this is around the main effect window for the selected method.";
+  if(minutes<tail) return "Later active / comedown: the main peak may be easing, but impairment can remain.";
+  return "Residual / late phase: the main effect window may be past, though after-effects or impairment can persist.";
+}
+
+function configurePostCalculator(){
+  const derivative=document.getElementById("derivative").value;
+  const route=document.getElementById("route").value;
+  const meta=postMeta();
+
+  document.getElementById("postCompound").value=derivative;
+
+  const postMethod=document.getElementById("postMethod");
+  postMethod.replaceChildren();
+  [...document.getElementById("route").options].forEach(opt=>{
+    const o=document.createElement("option");
+    o.value=opt.value;
+    o.textContent=opt.textContent;
+    postMethod.appendChild(o);
+  });
+  postMethod.value=route;
+
+  if(meta.defaultUnit){
+    document.getElementById("postUnit").value=meta.defaultUnit;
+  }
+
+  updatePostExtraFields();
+  calculatePostUse();
+}
+
+function updatePostExtraFields(){
+  const unit=document.getElementById("postUnit").value;
+  document.getElementById("countFields").hidden=unit!=="count";
+  document.getElementById("liquidFieldsUniversal").hidden=unit!=="ml";
+}
+
+function syncMethodFromCalculator(){
+  const method=document.getElementById("postMethod").value;
+  const route=document.getElementById("route");
+  if([...route.options].some(o=>o.value===method)){
+    route.value=method;
+    updateRoute();
+  }
+  calculatePostUse();
+}
+
+function classifyPost(value,unit,meta,route){
+  if(!meta.classifyUnit || !meta.bands) return null;
+
+  // For cannabis, only use the simple milligram classifier for oral/edible active THC.
+  if(meta.routeLimited && !(route.toLowerCase().includes("edible") || route.toLowerCase().includes("oral"))){
+    return null;
+  }
+
+  const mg=toMg(value,unit);
+  if(mg===null) return null;
+  const converted=fromMg(mg,meta.classifyUnit);
+  if(converted===null) return null;
+
+  for(const [max,label] of meta.bands){
+    if(converted<max) return label;
+  }
+  return meta.bands[meta.bands.length-1][1];
+}
+
+function intensityCopy(label,key){
+  if(!label) return "";
+  const low=label.toLowerCase();
+
+  if(low.includes("threshold") || low.includes("very light")){
+    return "Some effects may be subtle or still building. Individual sensitivity and product potency can make even a low-end amount feel unexpectedly noticeable.";
+  }
+  if(low==="light"){
+    return "Noticeable effects are plausible, but the experience may remain relatively manageable compared with stronger exposures. Route timing still matters.";
+  }
+  if(low.includes("clear psychedelic")){
+    return "A clearly altered state is plausible, including perceptual changes, time distortion, and impaired judgment. For psychedelics, this can feel much more intense during the peak than during the early come-up.";
+  }
+  if(low==="strong"){
+    return "A strong altered state is plausible. Major visual/cognitive changes, impaired coordination, confusion, or difficulty communicating can become much more likely.";
+  }
+  if(low.includes("very strong")){
+    return "This is a very intense post-use category. Profound perceptual change, loss of ordinary context, severe coordination impairment, or overwhelming psychological effects may occur. Do not use the category to dismiss serious physical symptoms.";
+  }
+  return "This label is only a broad after-the-fact description, not a prediction or safety boundary.";
+}
+
+function calculatePostUse(){
+  const derivative=document.getElementById("derivative").value;
+  const route=document.getElementById("postMethod").value || document.getElementById("route").value;
+  const amount=Number.parseFloat(document.getElementById("postAmount").value);
+  const unit=document.getElementById("postUnit").value;
+  const lb=Number.parseFloat(document.getElementById("postWeight").value);
+  const minutes=Number.parseFloat(document.getElementById("postMinutes").value);
+  const meta=postMeta();
+
+  if(!Number.isFinite(amount) || amount<0){
+    document.getElementById("postEntered").textContent="check amount";
+    document.getElementById("postActive").textContent="—";
+    document.getElementById("postMgKg").textContent="—";
+    document.getElementById("postIntensity").textContent="Check the amount";
+    document.getElementById("postIntensityBody").textContent="Enter a valid amount already taken.";
+    document.getElementById("postPhase").hidden=true;
+    return;
+  }
+
+  let activeMg=null;
+  let enteredText=fmt(amount,4)+" "+prettyUnit(unit);
+  let activeText="not convertible";
+
+  if(unit==="mg" || unit==="ug" || unit==="g"){
+    activeMg=toMg(amount,unit);
+    activeText=fmt(activeMg,4)+" mg";
+  }else if(unit==="count"){
+    const per=Number.parseFloat(document.getElementById("perUnitAmount").value);
+    const perUnit=document.getElementById("perUnitUnit").value;
+    if(Number.isFinite(per) && per>=0){
+      const eachMg=toMg(per,perUnit);
+      activeMg=amount*eachMg;
+      activeText=fmt(activeMg,4)+" mg active";
+    }else{
+      activeText="needs per-unit amount";
+    }
+  }else if(unit==="ml"){
+    const c=Number.parseFloat(document.getElementById("concentration").value);
+    const cu=document.getElementById("concentrationUnit").value;
+    if(Number.isFinite(c) && c>=0){
+      if(cu==="mgml") activeMg=amount*c;
+      if(cu==="mg5ml") activeMg=amount*(c/5);
+      if(cu==="ugml") activeMg=(amount*c)/1000;
+      activeText=fmt(activeMg,4)+" mg active";
+    }else{
+      activeText="needs concentration";
+    }
+  }
+
+  document.getElementById("postEntered").textContent=enteredText;
+  document.getElementById("postActive").textContent=activeText;
+
+  if(activeMg!==null && Number.isFinite(lb) && lb>0){
+    const kg=lb/2.20462;
+    document.getElementById("postMgKg").textContent=fmt(activeMg/kg,4)+" mg/kg";
+  }else{
+    document.getElementById("postMgKg").textContent=Number.isFinite(lb)&&lb>0 ? "needs active mg" : "optional";
+  }
+
+  let classifyValue=amount;
+  let classifyUnit=unit;
+
+  // If the user entered count or mL and supplied a concentration, classify using active mg.
+  if((unit==="count" || unit==="ml") && activeMg!==null){
+    classifyValue=activeMg;
+    classifyUnit="mg";
+  }
+
+  const label=classifyPost(classifyValue,classifyUnit,meta,route);
+  const intensity=document.getElementById("postIntensity");
+  const body=document.getElementById("postIntensityBody");
+  const evidence=document.getElementById("postEvidence");
+
+  if(label){
+    intensity.textContent=label;
+    evidence.textContent="rough post-use context";
+    body.textContent=intensityCopy(label,currentKey)+" "+meta.note;
+  }else{
+    intensity.textContent="No reliable intensity grade";
+    evidence.textContent="timing + math still work";
+    body.textContent=meta.note;
+  }
+
+  document.getElementById("postMethodNote").textContent=
+    "Selected method: "+route+". The method changes timing and risk context; it is not used to calculate an equivalent target amount.";
+
+  const phase=phaseFor(minutes,routeTiming(currentKey,derivative,route));
+  const phaseBox=document.getElementById("postPhase");
+  if(phase){
+    phaseBox.hidden=false;
+    phaseBox.textContent=phase+" Timing is approximate and can shift with food, formulation, metabolism, technique, and combinations.";
+  }else{
+    phaseBox.hidden=true;
+  }
+}
+
 
 // DXM calculator: known-amount interpretation only.
 const HBR_TO_FREEBASE=0.733;
@@ -1093,6 +1805,16 @@ function calculateDXM(){
   document.getElementById("dxmOutput").textContent=band[2]+". "+note+" This describes an already-known amount; it is not a target.";
 }
 
+document.getElementById("postAmount").addEventListener("input",calculatePostUse);
+document.getElementById("postUnit").addEventListener("change",()=>{updatePostExtraFields();calculatePostUse();});
+document.getElementById("postMethod").addEventListener("change",syncMethodFromCalculator);
+document.getElementById("postMinutes").addEventListener("input",calculatePostUse);
+document.getElementById("postWeight").addEventListener("input",calculatePostUse);
+document.getElementById("perUnitAmount").addEventListener("input",calculatePostUse);
+document.getElementById("perUnitUnit").addEventListener("change",calculatePostUse);
+document.getElementById("concentration").addEventListener("input",calculatePostUse);
+document.getElementById("concentrationUnit").addEventListener("change",calculatePostUse);
+
 document.getElementById("formHbr").addEventListener("click",()=>setForm("hbr"));
 document.getElementById("formFreebase").addEventListener("click",()=>setForm("freebase"));
 document.getElementById("formPolistirex").addEventListener("click",()=>setForm("polistirex"));
@@ -1101,12 +1823,9 @@ document.getElementById("source").addEventListener("change",updateSource);
   document.getElementById(id).addEventListener("input",calculateDXM);
 });
 
-["knownAmount","knownUnit","knownWeight","knownMinutes"].forEach(id=>{
-  const el=document.getElementById(id);
-  el.addEventListener(id==="knownUnit" ? "change" : "input", calculateKnown);
-});
 
 renderProfile("psilocybin");
+configurePostCalculator();
 setForm("hbr");
 updateSource();
 </script>
