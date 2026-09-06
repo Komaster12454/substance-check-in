@@ -1101,6 +1101,11 @@ document.getElementById("source").addEventListener("change",updateSource);
   document.getElementById(id).addEventListener("input",calculateDXM);
 });
 
+["knownAmount","knownUnit","knownWeight","knownMinutes"].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener(id==="knownUnit" ? "change" : "input", calculateKnown);
+});
+
 renderProfile("psilocybin");
 setForm("hbr");
 updateSource();
