@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Substance Check-In</title>
+<meta name="description" content="One-substance-at-a-time recreational harm reduction with route, formulation, derivative, and known-amount context.">
+<style>
+  :root{
+    --paper:#f7f0de; --ink:#171614; --muted:#615d55; --cream:#fffaf0;
+    --line:#1a1916; --pink:#ef9aba; --blue:#9fd3ff; --green:#b9dfb4;
+    --yellow:#ffe27a; --orange:#f7b07e; --violet:#c7b4f7; --aqua:#afe1dd;
+    --red:#b52e28; --softred:#fff0ed; --softblue:#eef7ff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;color:var(--ink);
+    font-family:"Trebuchet MS",Arial,sans-serif;
+    background:
+      radial-gradient(circle at 10% 5%,rgba(239,154,186,.18),transparent 22rem),
+      radial-gradient(circle at 90% 10%,rgba(159,211,255,.18),transparent 24rem),
+      var(--paper);
+  }
+  button,input,select{font:inherit}
+  button{cursor:pointer}
+  button:focus-visible,input:focus-visible,select:focus-visible{
+    outline:4px solid rgba(80,145,230,.35);outline-offset:2px
+  }
+  .page{max-width:1180px;margin:auto;padding:20px 18px 60px}
+  header{
+    display:flex;justify-content:space-between;gap:18px;align-items:flex-start;
+    border-bottom:3px solid var(--line);padding-bottom:18px
+  }
+  .brand{display:flex;gap:12px;align-items:center;font-weight:950}
+  .mark{
+    width:48px;height:48px;display:grid;place-items:center;border:3px solid var(--line);
+    background:var(--pink);box-shadow:4px 4px 0 var(--line);transform:rotate(-2deg)
+  }
+  .brand small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+  .top-note{max-width:420px;text-align:right;font-size:12px;line-height:1.5;color:var(--muted)}
+  .hero{
+    display:grid;grid-template-columns:minmax(0,1.3fr) minmax(260px,.7fr);
+    gap:28px;padding:36px 0 28px
+  }
+  h1{
+    margin:0 0 18px;font:900 clamp(44px,7vw,82px)/.9 Georgia,"Times New Roman",serif;
+    letter-spacing:-.055em
+  }
+  .hero p{margin:0;max-width:760px;font-size:17px;line-height:1.68}
+  .note-card{
+    border:3px solid var(--line);background:var(--yellow);padding:17px;
+    box-shadow:7px 7px 0 var(--line);transform:rotate(1deg);font-size:14px;line-height:1.55
+  }
+  .note-card b{display:block;font:900 18px Georgia,"Times New Roman",serif;margin-bottom:7px}
+  .tabs{
+    display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+    border:3px solid var(--line);background:#fff
+  }
+  .tab{
+    min-height:68px;border:0;background:#fff;color:var(--ink);font-weight:900;font-size:12px;
+    padding:10px 8px
+  }
+  .tab + .tab{border-left:2px solid var(--line)}
+  .tab:nth-child(n+6){border-top:2px solid var(--line)}
+  .tab:nth-child(6){border-left:0}
+  .tab[aria-pressed="true"]{background:var(--tab)}
+  .emoji{display:block;font-size:20px;margin-bottom:4px}
+  .section-title{
+    display:flex;justify-content:space-between;gap:14px;align-items:end;margin:0 0 12px
+  }
+  .section-title h2{margin:0;font:900 27px Georgia,"Times New Roman",serif}
+  .section-title span{font-size:12px;color:var(--muted)}
+  .main{
+    display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);
+    gap:22px;margin-top:22px;align-items:start
+  }
+  .panel{border:3px solid var(--line);background:var(--cream)}
+  .panel-head{
+    padding:16px 18px;border-bottom:3px solid var(--line);
+    display:flex;justify-content:space-between;gap:12px;align-items:center
+  }
+  .panel-head h2{margin:0;font:900 25px Georgia,"Times New Roman",serif}
+  .pill{border:2px solid var(--line);background:#fff;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase}
+  .body{padding:18px}
+  .lead{color:var(--muted);font-size:14px;line-height:1.65;margin:0 0 16px}
+  .controls{
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px
+  }
+  .field label{
+    display:block;font-size:10px;font-weight:900;letter-spacing:.06em;
+    text-transform:uppercase;margin-bottom:5px
+  }
+  select,input{
+    width:100%;min-height:44px;border:2px solid var(--line);background:#fff;
+    padding:10px 11px;color:var(--ink)
+  }
+
+  .evidence-bar{
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+    border:2px solid var(--line);background:#fff;padding:10px 11px;margin-bottom:14px
+  }
+  .evidence-bar strong{font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+  .evidence-pill{border:2px solid var(--line);padding:4px 7px;font-size:10px;font-weight:900;background:#f1ecdf}
+  .evidence-high{background:#daf0db}.evidence-mid{background:#fff0b8}.evidence-low{background:#f4d7e1}
+  .evidence-copy{font-size:11px;color:var(--muted);line-height:1.4}
+  .compare-card{margin-top:14px;border:2px dashed var(--line);background:#fff;padding:11px 12px}
+  .compare-card b{display:block;font:900 15px Georgia,"Times New Roman",serif;margin-bottom:4px}
+  .compare-card span{font-size:12px;color:var(--muted);line-height:1.5}
+
+  .route-card{
+    border:3px solid var(--line);background:#fff;margin-bottom:17px
+  }
+  .route-top{
+    padding:13px 14px;border-bottom:2px solid var(--line);background:var(--softblue)
+  }
+  .route-top b{font:900 18px Georgia,"Times New Roman",serif}
+  .route-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+  .route-cell{padding:12px}
+  .route-cell + .route-cell{border-left:2px solid var(--line)}
+  .route-cell strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+  .route-cell span{font-size:12px;line-height:1.45;color:var(--muted)}
+  .summary{display:grid;grid-template-columns:repeat(3,1fr);border:3px solid var(--line);background:#fff}
+  .summary>div{padding:12px}
+  .summary>div + div{border-left:2px solid var(--line)}
+  .summary b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+  .summary span{font-size:12px;line-height:1.45;color:var(--muted)}
+  .block{margin-top:18px}
+  .block h3{margin:0 0 9px;font:900 19px Georgia,"Times New Roman",serif}
+  .effects{display:grid;grid-template-columns:1fr 1fr;border:3px solid var(--line);background:#fff}
+  .effect{padding:13px;min-height:92px}
+  .effect:nth-child(odd){border-right:2px solid var(--line)}
+  .effect:nth-child(n+3){border-top:2px solid var(--line)}
+  .effect b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+  .effect span{font-size:13px;line-height:1.48;color:var(--muted)}
+  .list{margin:0;padding:0;list-style:none;border:3px solid var(--line);background:#fff}
+  .list li{padding:12px 13px;font-size:13px;line-height:1.5}
+  .list li + li{border-top:2px solid var(--line)}
+  .list strong{font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  .calm{border:3px solid var(--line);background:#eef9ef;padding:14px;font-size:14px;line-height:1.6}
+  .redflag{border:3px solid var(--red);background:var(--softred);padding:14px;color:#76221d;font-size:13px;line-height:1.58}
+  .side{display:grid;gap:16px}
+  .side-card{border:3px solid var(--line);background:#fff;padding:16px}
+  .side-card h3{margin:0 0 8px;font:900 18px Georgia,"Times New Roman",serif}
+  .side-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.58}
+  .black{background:#1a1917;color:#fff}
+  .black p{color:#ddd6ca}
+  .calc{
+    margin-top:18px;border:3px solid var(--line);background:#fff
+  }
+  .calc-head{padding:13px 14px;border-bottom:3px solid var(--line);background:var(--blue)}
+  .calc-head h3{margin:0;font:900 20px Georgia,"Times New Roman",serif}
+  .calc-body{padding:14px}
+  .calc-note{font-size:12px;line-height:1.5;color:var(--muted);margin-bottom:12px}
+  .toggle-row{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid var(--line);margin-bottom:12px}
+  .toggle{
+    min-height:42px;border:0;background:#fff;color:var(--ink);font-size:11px;font-weight:900;padding:8px
+  }
+  .toggle + .toggle{border-left:2px solid var(--line)}
+  .toggle[aria-pressed="true"]{background:var(--yellow)}
+  .calc-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .full{grid-column:1/-1}
+  .inputrow{display:flex;border:2px solid var(--line);background:#fff}
+  .inputrow input{border:0;min-height:42px}
+  .unit{display:flex;align-items:center;border-left:2px solid var(--line);padding:0 9px;font-size:11px;font-weight:900;background:#f2ecdf;white-space:nowrap}
+  .results{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid var(--line);margin-top:12px}
+  .results>div{padding:10px}
+  .results>div + div{border-left:2px solid var(--line)}
+  .results small{display:block;font-size:9px;text-transform:uppercase;color:var(--muted);font-weight:900;margin-bottom:3px}
+  .results strong{font:900 16px Georgia,"Times New Roman",serif}
+  .output{margin-top:10px;border:2px dashed var(--line);background:#f8fbff;padding:10px;font-size:12px;line-height:1.5;color:var(--muted)}
+  .calc[hidden]{display:none}
+  .footer{
+    margin-top:28px;padding-top:15px;border-top:3px solid var(--line);
+    display:flex;justify-content:space-between;gap:16px;color:var(--muted);font-size:11px;line-height:1.5
+  }
+  @media(max-width:900px){
+    .hero,.main{grid-template-columns:1fr}
+    .top-note{text-align:left}
+    .tabs{grid-template-columns:repeat(2,1fr)}
+    .tab + .tab{border-left:0}
+    .tab:nth-child(even){border-left:2px solid var(--line)}
+    .tab:nth-child(n+3){border-top:2px solid var(--line)}
+    .tab:nth-child(6){border-left:2px solid var(--line)}
+  }
+  @media(max-width:560px){
+    header{display:block}.top-note{margin-top:12px}
+    .tabs{grid-template-columns:1fr}
+    .tab,.tab:nth-child(even),.tab:nth-child(6){border-left:0}
+    .tab + .tab{border-top:2px solid var(--line)}
+    .controls,.route-grid,.summary,.effects,.calc-fields,.results,.toggle-row{grid-template-columns:1fr}
+    .route-cell + .route-cell,.summary>div + div,.results>div + div,.toggle + .toggle{border-left:0;border-top:2px solid var(--line)}
+    .effect:nth-child(odd){border-right:0}
+    .effect + .effect{border-top:2px solid var(--line)}
+    .footer{display:block}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="brand">
+      <div class="mark">✦</div>
+      <div>
+        Substance Check-In
+        <small>ONE SUBSTANCE AT A TIME • ROUTE-AWARE HARM REDUCTION</small>
+      </div>
+    </div>
+    <div class="top-note">
+      Route and derivative matter, but the site does not convert one route into an “equivalent recreational dose.”
+      It uses methods to change timing, uncertainty, and safety guidance rather than to optimize intake.
+    </div>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>same family.<br>different roads.</h1>
+      <p>
+        Swallowed, inhaled, tea, lemon tek, blotter, seed material, or extended-release can feel different even when the active drug is related.
+        Derivatives and analogues can also change pharmacology, duration, body load, and uncertainty. This version now gives the actual derivative its own profile
+        instead of treating every member of a family as the same drug.
+      </p>
+    </div>
+    <aside class="note-card">
+      <b>Method changes the map</b>
+      Faster routes often mean faster changes. Longer formulations can mean a slower climb and a longer tail.
+      Neither one makes an unknown product predictable.
+    </aside>
+  </section>
+
+  <section>
+    <div class="section-title">
+      <h2>Pick the substance family</h2>
+      <span>Then choose the actual derivative/form and method.</span>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab" style="--tab:#f2bfd2" data-key="psilocybin" aria-pressed="true"><span class="emoji">🍄</span>Psilocybin</button>
+      <button class="tab" style="--tab:#b9dfb4" data-key="cannabis" aria-pressed="false"><span class="emoji">🌿</span>Cannabis</button>
+      <button class="tab" style="--tab:#a8d8ff" data-key="dmt" aria-pressed="false"><span class="emoji">◈</span>DMT</button>
+      <button class="tab" style="--tab:#cbb8ff" data-key="lysergamides" aria-pressed="false"><span class="emoji">🌀</span>Lysergamides</button>
+      <button class="tab" style="--tab:#ffc1ae" data-key="mdma" aria-pressed="false"><span class="emoji">♡</span>MDMA</button>
+      <button class="tab" style="--tab:#ffe7a1" data-key="rc" aria-pressed="false"><span class="emoji">⚗</span>Unknown / RC</button>
+      <button class="tab" style="--tab:#f7b88c" data-key="2cx" aria-pressed="false"><span class="emoji">✹</span>2C-x</button>
+      <button class="tab" style="--tab:#a6e2df" data-key="dissociatives" aria-pressed="false"><span class="emoji">◇</span>Dissociatives</button>
+      <button class="tab" style="--tab:#9ecfff" data-key="dxm" aria-pressed="false"><span class="emoji">☁</span>DXM</button>
+      <button class="tab" style="--tab:#d9e8a2" data-key="nootropics" aria-pressed="false"><span class="emoji">⌁</span>Nootropics</button>
+    </div>
+  </section>
+
+  <main class="main">
+    <section class="panel">
+      <div class="panel-head" id="profileHead">
+        <h2 id="name">Psilocybin</h2>
+        <span class="pill" id="class">classic psychedelic</span>
+      </div>
+
+      <div class="body">
+        <p class="lead" id="lead"></p>
+
+        <div class="controls">
+          <div class="field">
+            <label for="derivative">Derivative / form</label>
+            <select id="derivative"></select>
+          </div>
+          <div class="field">
+            <label for="route">Method / route</label>
+            <select id="route"></select>
+          </div>
+        </div>
+
+        <div class="evidence-bar">
+          <strong>Evidence</strong>
+          <span class="evidence-pill evidence-high" id="evidencePill">human data</span>
+          <span class="evidence-copy" id="evidenceCopy">Evidence quality varies by derivative and route.</span>
+        </div>
+
+        <div class="route-card">
+          <div class="route-top"><b id="routeTitle">Route profile</b></div>
+          <div class="route-grid">
+            <div class="route-cell"><strong>Onset shape</strong><span id="onset"></span></div>
+            <div class="route-cell"><strong>Duration shape</strong><span id="duration"></span></div>
+            <div class="route-cell"><strong>Method-specific concern</strong><span id="routeRisk"></span></div>
+          </div>
+        </div>
+
+        <div class="summary">
+          <div><b>Character</b><span id="character"></span></div>
+          <div><b>Derivative note</b><span id="derivativeNote"></span></div>
+          <div><b>Main uncertainty</b><span id="uncertainty"></span></div>
+        </div>
+
+        <div class="compare-card">
+          <b>How this one differs</b>
+          <span id="comparison">Choose a derivative to see what makes it meaningfully different from nearby compounds.</span>
+        </div>
+
+        <section class="block">
+          <h3>What can feel normal-ish</h3>
+          <div class="effects" id="effects"></div>
+        </section>
+
+        <section class="block">
+          <h3>If it feels intense</h3>
+          <div class="calm" id="calm"></div>
+        </section>
+
+        <section class="block">
+          <h3>Good harm-reduction anchors</h3>
+          <ul class="list" id="anchors"></ul>
+        </section>
+
+        <section class="block">
+          <div class="redflag" id="redflag"></div>
+        </section>
+
+        <section class="calc" id="dxmCalc" hidden>
+          <div class="calc-head"><h3>DXM known-amount calculator</h3></div>
+          <div class="calc-body">
+            <div class="calc-note">
+              This is the one place the site does formulation math. It interprets an amount already taken or already being checked.
+              It does not convert a route into a target dose or tell you how much to take next.
+            </div>
+
+            <div class="toggle-row">
+              <button class="toggle" id="formHbr" type="button" aria-pressed="true">DXM HBr</button>
+              <button class="toggle" id="formFreebase" type="button" aria-pressed="false">DXM freebase</button>
+              <button class="toggle" id="formPolistirex" type="button" aria-pressed="false">Dextromethorphan polistirex</button>
+            </div>
+
+            <div class="calc-fields">
+              <div class="field full">
+                <label for="weight">Body weight</label>
+                <div class="inputrow"><input id="weight" type="number" value="180" min="1" step="0.1"><div class="unit">lb</div></div>
+              </div>
+              <div class="field">
+                <label for="amount">Already-known total</label>
+                <div class="inputrow"><input id="amount" type="number" value="240" min="0" step="0.1"><div class="unit">mg</div></div>
+              </div>
+              <div class="field">
+                <label for="source">Where that amount came from</label>
+                <select id="source">
+                  <option value="known">Known total mg</option>
+                  <option value="caplets">Caplets/tablets</option>
+                  <option value="liquid">Liquid label</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="capletFields" class="calc-fields" style="margin-top:10px" hidden>
+              <div class="field">
+                <label for="count">Caplets</label>
+                <div class="inputrow"><input id="count" type="number" value="16" min="0" step="1"><div class="unit">count</div></div>
+              </div>
+              <div class="field">
+                <label for="strength">mg per caplet</label>
+                <div class="inputrow"><input id="strength" type="number" value="15" min="0" step="0.1"><div class="unit">mg</div></div>
+              </div>
+            </div>
+
+            <div id="liquidFields" class="calc-fields" style="margin-top:10px" hidden>
+              <div class="field">
+                <label for="volume">Liquid amount</label>
+                <div class="inputrow"><input id="volume" type="number" value="80" min="0" step="0.1"><div class="unit">mL</div></div>
+              </div>
+              <div class="field">
+                <label for="liquidStrength">Label strength</label>
+                <div class="inputrow"><input id="liquidStrength" type="number" value="15" min="0" step="0.1"><div class="unit">mg / 5 mL</div></div>
+              </div>
+            </div>
+
+            <div class="results">
+              <div><small>weight</small><strong id="kg">81.65 kg</strong></div>
+              <div><small>entered total</small><strong id="total">240 mg HBr</strong></div>
+              <div><small>HBr-eq exposure</small><strong id="mgkg">2.94 mg/kg</strong></div>
+            </div>
+            <div class="output" id="dxmOutput" aria-live="polite"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <aside class="side">
+      <section class="side-card">
+        <h3>Why there is no route-equivalence calculator</h3>
+        <p>
+          Swallowed vs inhaled vs sublingual is not just a unit conversion. Bioavailability, onset, peak concentration,
+          metabolism, formulation, and technique can all change the experience. Turning those into “take X by route B”
+          would be falsely precise and bad harm reduction.
+        </p>
+      </section>
+      <section class="side-card">
+        <h3>Derivative ≠ flavor</h3>
+        <p>
+          LSD analogues, 2C-x compounds, cannabinoids, dissociatives, and research chemicals can differ substantially.
+          A shared family name does not make potency or duration interchangeable.
+        </p>
+      </section>
+      <section class="side-card black">
+        <h3>Unknown still means unknown</h3>
+        <p>
+          A colorful package, blotter art, powder color, pill shape, “mushroom” branding, or seller description cannot
+          establish identity. The less certain the identity, the less useful any effect chart becomes.
+        </p>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <div>Substance Check-In • recreational harm reduction • route-aware • one substance at a time</div>
+    <div>Method and derivative selectors change context, not target-dose recommendations.</div>
+  </footer>
+</div>
+
+<script>
+const DATA = {
+  psilocybin:{
+    name:"Psilocybin", class:"classic psychedelic", color:"#f2bfd2",
+    lead:"Psilocybin mushrooms and psilocybin-containing products can strongly alter vision, emotion, thought, and time.",
+    derivatives:{
+      "Psilocybin mushrooms":"Whole-mushroom psilocybin profile with route-specific methods such as tea and lemon tek.",
+      "4-AcO-DMT (psilacetin)":"Psilocybin-like 4-acetoxy tryptamine with likely prodrug-like conversion to psilocin; human clinical data remain sparse.",
+      "4-HO-MET (metocin)":"4-hydroxy tryptamine often described as visually foregrounded; controlled human data are limited.",
+      "4-AcO-MET":"Acetoxy analogue related to 4-HO-MET; direct human evidence is sparse.",
+      "4-HO-MiPT (miprocin)":"4-hydroxy tryptamine with tactile/body-focused community reports and limited controlled evidence."
+    },
+    routes:{
+      "Whole / dried mushrooms":"Gradual oral come-up.|Multi-hour psychedelic course.|Potency varies between specimens and nausea can be significant.",
+      "Capsules":"Still an oral route; encapsulation does not make onset instant.|Similar overall oral time-course.|Capsules hide appearance and do not verify contents.",
+      "Tea / liquid preparation":"Often reported as a somewhat faster-feeling oral onset; controlled comparisons are limited.|Still multi-hour.|Preparation does not standardize potency.",
+      "Lemon tek / acidic pre-soak":"Commonly reported as a faster, sharper-feeling come-up; controlled human evidence is lacking.|Often reported as more front-loaded and sometimes shorter, but this is not clinically established.|Do not treat internet claims about complete chemical conversion as a precise guarantee.",
+      "Chocolate / edible product":"Oral and potentially delayed by the food matrix.|Multi-hour, with variable onset.|Commercial 'mushroom' bars may contain research chemicals or cannabinoids instead of mushrooms."
+    },
+    character:"visual, emotional, introspective, nonlinear",
+    uncertainty:"potency and identity can vary; wild mushrooms add a separate poisoning risk",
+    effects:[
+      ["Vision","Flowing surfaces, patterning, color enhancement, depth distortion, closed-eye imagery."],
+      ["Mind","Introspection, unusual associations, emotional amplification, loops, altered sense of self."],
+      ["Body","Nausea, yawning, heaviness/lightness, temperature weirdness, dilated pupils."],
+      ["Time","Minutes may feel stretched, compressed, or disconnected from the clock."]
+    ],
+    calm:"<b>Visuals, emotional waves, and time distortion can be part of the experience.</b> Lower stimulation, sit somewhere physically safe, and remember that altered time perception can make a temporary state feel endless.",
+    anchors:[
+      ["Setting","A familiar, physically safe environment reduces avoidable problems when perception and judgment are altered."],
+      ["Identity","Do not identify wild mushrooms from vibe or a single photo. Toxic look-alikes are a separate poisoning problem."],
+      ["Movement","Driving, traffic, heights, and water are poor matches for impaired perception."]
+    ],
+    red:"<b>More concerning:</b> seizure, collapse, inability to wake, severe chest pain, very high temperature, dangerous agitation, or suspected poisonous-mushroom exposure."
+  },
+
+  cannabis:{
+    name:"Cannabis / cannabinoids", class:"cannabinoid", color:"#b9dfb4",
+    lead:"Cannabis can alter mood, memory, coordination, time perception, sensory intensity, and anxiety. Hemp-derived cannabinoids can be less well characterized.",
+    derivatives:{
+      "Delta-9 THC":"The best-studied intoxicating cannabinoid in common recreational use.",
+      "HHC":"THC-like effects are reported, but human data and product consistency are more limited.",
+      "Delta-8 THC":"Generally described as THC-like, with weaker evidence and variable product quality.",
+      "Mixed hemp cannabinoids":"The effect depends on what is actually in the blend; 'hemp-derived' alone is not a pharmacological description."
+    },
+    routes:{
+      "Inhaled / vape":"Fast feedback compared with oral products.|Usually shorter-lived than edibles, though residual impairment can persist.|Rapid stacking of repeated hits can overshoot before you notice how impaired you are.",
+      "Smoked":"Fast feedback with combustion exposure.|Usually shorter-lived than oral cannabis.|Coordination and judgment can drop quickly even when the person feels functional.",
+      "Edible / oral":"Delayed onset compared with inhalation.|Often much longer-lasting.|The delay is the main trap: people may add more before the first amount has fully developed."
+    },
+    character:"relaxed or euphoric, sensory, time-bendy, sometimes anxious",
+    uncertainty:"potency, route, tolerance, and cannabinoid blend",
+    effects:[
+      ["Mind","Euphoria, laughter, distractibility, short-term-memory weirdness, inward focus, or paranoia."],
+      ["Body","Dry mouth, heavy/floaty body feel, faster heartbeat, red eyes, impaired coordination."],
+      ["Perception","Music and textures may feel richer; strong intoxication can become visually strange."],
+      ["Time","Short periods can feel much longer."]
+    ],
+    calm:"<b>A racing heart, time distortion, and 'I got way too high' are common panic triggers.</b> Sit down, reduce stimulation, and avoid repeatedly checking the clock or body sensations.",
+    anchors:[
+      ["Route","Edibles and inhaled cannabis have very different timing."],
+      ["Product","HHC, delta-8, delta-9, and mixed products are not interchangeable just because the package says hemp."],
+      ["Coordination","Driving, cooking, bikes, stairs, and water activities deserve extra caution."]
+    ],
+    red:"<b>More concerning:</b> collapse, seizure, trouble breathing, severe chest pain, or persistent vomiting with inability to keep fluids down."
+  },
+
+  dmt:{
+    name:"DMT", class:"classic psychedelic", color:"#a8d8ff",
+    lead:"DMT can rapidly alter visual space, body perception, and the sense of being located in ordinary reality.",
+    derivatives:{
+      "N,N-DMT":"The classic visual DMT molecule.",
+      "5-MeO-DMT":"A distinct short-acting tryptamine with less visual imagery and stronger ego-dissolution tendencies.",
+      "Bufotenine (5-HO-DMT)":"5-hydroxy-DMT; less well characterized in modern controlled human research.",
+      "5-MeO-MiPT (moxy)":"Longer, more stimulating/tactile 5-methoxy tryptamine; sparse controlled human data.",
+      "DiPT":"Tryptamine notable for prominent auditory pitch distortion in reports.",
+      "Ayahuasca-style DMT + MAOI":"A distinct pharmacological situation because MAO inhibition changes duration and interaction risk."
+    },
+    routes:{
+      "Inhaled / vaporized":"Very rapid onset and very intense changes.|Comparatively brief but can feel subjectively enormous.|Loss of orientation can happen before there is time to move somewhere safer.",
+      "Oral with MAOI":"Slow oral development compared with inhalation.|Much longer than inhaled DMT.|MAO inhibition creates important medication and drug interactions."
+    },
+    character:"rapid, immersive, visual, reality-disrupting",
+    uncertainty:"route and exact compound matter greatly",
+    effects:[
+      ["Vision","Geometric patterning, altered environments, intense color/motion, entity-like imagery."],
+      ["Self / body","Body boundaries can feel absent, distant, stretched, or detached."],
+      ["Mind","Profound meaning, confusion, awe, fear, or total absorption."],
+      ["Time","A short period can feel enormous or difficult to place chronologically."]
+    ],
+    calm:"<b>Feeling as if ordinary reality disappeared can happen.</b> Physical safety matters more than trying to intellectually solve the experience while it is happening.",
+    anchors:[
+      ["Position","Fast onset makes being seated or lying somewhere safe especially important."],
+      ["MAOI distinction","Ayahuasca-style preparations have a different interaction profile from inhaled DMT."],
+      ["Environment","Avoid edges, traffic, flames, and water."]
+    ],
+    red:"<b>More concerning:</b> seizure, collapse, trouble breathing, severe chest pain, very high temperature, or prolonged unresponsiveness."
+  },
+
+  lysergamides:{
+    name:"Lysergamides", class:"LSD-family psychedelic", color:"#cbb8ff",
+    lead:"LSD and related lysergamides are long-acting psychedelics with strong visual, cognitive, emotional, and stimulant-like effects.",
+    derivatives:{
+      "LSD":"The reference lysergamide with the largest human evidence base.",
+      "1P-LSD":"Human pharmacokinetic evidence supports conversion to LSD after administration.",
+      "1cP-LSD":"Human-serum work supports conversion to LSD; direct human subjective data are limited.",
+      "ALD-52 (1A-LSD)":"1-acetyl LSD derivative with prodrug-like biotransformation evidence.",
+      "AL-LAD":"Distinct N6-allyl lysergamide; not simply an LSD prodrug.",
+      "ETH-LAD":"Distinct N6-ethyl lysergamide with sparse human data and a recent analytically confirmed severe toxicity case.",
+      "LSZ":"Distinct lysergamide with LSD-like preclinical activity and limited human data.",
+      "LSA / ergine":"Naturally occurring lysergic acid amide found in some Convolvulaceae seeds; not 'natural LSD.'"
+    },
+    routes:{
+      "Oral / blotter":"Gradual development over tens of minutes to hours.|Long-lasting, with residual stimulation after the main peak.|Long duration can make a difficult period feel permanent.",
+      "Sublingual / buccal":"Still not an instant route; onset may feel somewhat different but remains prolonged.|Long-lasting.|Route should not be used as a shortcut to calculate a supposedly equivalent dose."
+    },
+    character:"long, visual, stimulating, analytical or emotionally expansive",
+    uncertainty:"analogue identity and blotter contents",
+    effects:[
+      ["Vision","Patterning, trails, flowing surfaces, geometric overlays, stronger color/contrast."],
+      ["Mind","Thought loops, novel associations, symbolic thinking, emotional amplification."],
+      ["Body","Stimulation, restlessness, muscle tension, appetite suppression, temperature sensitivity."],
+      ["Time","Time can become extremely elastic."]
+    ],
+    calm:"<b>Thought loops are a feature, not proof that you are permanently stuck.</b> Change one environmental variable instead of arguing with the loop.",
+    anchors:[
+      ["Duration","Plan around a long experience and residual stimulation."],
+      ["Identity","Blotter art cannot verify the compound."],
+      ["Setting","Anxious surroundings can become disproportionately important."]
+    ],
+    red:"<b>More concerning:</b> seizure, collapse, dangerously high temperature, severe chest pain, violent/uncontrollable agitation, or prolonged unresponsiveness."
+  },
+
+  mdma:{
+    name:"MDMA", class:"entactogen / stimulant", color:"#ffc1ae",
+    lead:"MDMA often increases warmth, energy, openness, sociability, tactile pleasure, and stimulation.",
+    derivatives:{
+      "MDMA":"The reference entactogen in this category.",
+      "MDA":"Related but distinct, often described as more psychedelic and typically longer-lasting; not an MDMA-equivalent.",
+      "Unknown pressed tablet / powder":"May contain MDMA, another stimulant, or something entirely different."
+    },
+    routes:{
+      "Oral":"Gradual onset compared with inhaled stimulants.|Several-hour experience with residual stimulation afterward.|Heat, exertion, and delayed development matter more than trying to chase the peak.",
+      "Unknown route / product":"Timing cannot be trusted without knowing the compound and route.|Unknown.|Unknown identity makes every other estimate less reliable."
+    },
+    character:"warm, empathic, energetic, tactile",
+    uncertainty:"identity, stimulant adulterants, temperature and fluid balance",
+    effects:[
+      ["Mind","Empathy, euphoria, emotional openness, talkativeness."],
+      ["Body","Jaw tension, sweating, faster heart rate, stimulation, muscle tension."],
+      ["Sensory","Touch and music may feel unusually rewarding."],
+      ["Afterward","Fatigue, sleep disruption, or low mood can follow."]
+    ],
+    calm:"<b>Feeling stimulated, sweaty, or jaw-clenchy can occur.</b> Uncontrolled overheating or rapidly worsening confusion should not be normalized.",
+    anchors:[
+      ["Heat","Crowds, exertion, and hot rooms can increase hyperthermia risk."],
+      ["Fluids","Both dehydration and excessive water intake can be harmful."],
+      ["Serotonin","Other serotonergic drugs and some medications can increase serotonin-toxicity risk."]
+    ],
+    red:"<b>More concerning:</b> very high temperature, severe confusion, collapse, seizure, severe chest pain, rigid muscles with worsening agitation, or inability to respond normally."
+  },
+
+  rc:{
+    name:"Unknown / research chemical", class:"unknown / incompletely characterized", color:"#ffe7a1",
+    lead:"'RC' is not one pharmacological class. Identity uncertainty is the main harm-reduction fact.",
+    derivatives:{
+      "Unknown powder / crystal":"Appearance does not establish identity or potency.",
+      "Unknown blotter":"Blotter format does not mean LSD.",
+      "Unknown pressed pill":"Shape, logo, and color do not establish contents.",
+      "Named research chemical":"A name helps only if it is accurate; many compounds have sparse human evidence."
+    },
+    routes:{
+      "Swallowed":"Oral timing varies wildly by compound.|Unknown.|Do not infer a familiar oral dose from an unrelated drug.",
+      "Inhaled / vaporized":"Fast delivery can make unknown potency especially unforgiving.|Unknown.|Unknown compounds can change before there is time to reassess.",
+      "Sublingual / buccal":"Absorption may differ from swallowing.|Unknown.|There is no safe generic route-equivalence conversion for an unidentified compound."
+    },
+    character:"cannot be predicted from the label 'RC'",
+    uncertainty:"identity, purity, potency, adulteration, human evidence",
+    effects:[
+      ["Label","'Legal high' or 'research chemical' does not tell you the pharmacology."],
+      ["Appearance","Powder color, crystals, blotter art, and pill shape are weak clues."],
+      ["Evidence","Some compounds have only sparse case reports or animal data."],
+      ["Potency","Different compounds can differ by orders of magnitude while looking identical."]
+    ],
+    calm:"<b>When the substance itself is uncertain, symptoms deserve more respect.</b> A familiar-drug chart cannot reliably explain an unknown reaction.",
+    anchors:[
+      ["Verify identity","Analytical drug checking is more useful than seller claims or appearance."],
+      ["No cross-drug conversions","A milligram amount ordinary for one compound can be enormous for another."],
+      ["Keep packaging","Compound names and packaging can be useful information if medical care becomes necessary."]
+    ],
+    red:"<b>More concerning:</b> any severe or rapidly worsening reaction, especially collapse, seizure, trouble breathing, very high temperature, severe chest pain, or profound unresponsiveness."
+  },
+
+  "2cx":{
+    name:"2C-x", class:"psychedelic phenethylamine family", color:"#f7b88c",
+    lead:"2C-x compounds overlap in visual and stimulant-like character but differ in potency, duration, and body load.",
+    derivatives:{
+      "2C-B":"Best-characterized 2C compound in modern human studies.",
+      "2C-C":"Chloro-substituted 2C psychedelic with sparse controlled human data.",
+      "2C-D":"Methyl-substituted 2C psychedelic with limited modern human evidence.",
+      "2C-E":"Human observational study exists; often described as more demanding than 2C-B.",
+      "2C-I":"Iodinated 2C psychedelic; do not confuse with 25I-NBOMe.",
+      "2C-T-2":"Sulfur-containing 2C-T compound with a thinner safety evidence base.",
+      "2C-T-7":"Sulfur-containing 2C-T compound with documented severe toxicity in the broader 2C literature.",
+      "25I-NBOMe / NBOMe family":"N-benzyl derivatives related to 2C compounds but far more potent at 5-HT2A and associated with severe toxicity/fatalities."
+    },
+    routes:{
+      "Oral":"Gradual psychedelic/stimulant development.|Varies by specific compound.|Nausea and body load can be more relevant than with some lysergamides.",
+      "Other / unknown":"Route can change intensity and risk substantially.|Varies.|Do not convert from an oral amount to another route by a simple multiplier."
+    },
+    character:"visual, stimulating, tactile, body-aware",
+    uncertainty:"specific compound identity",
+    effects:[
+      ["Vision","Color enhancement, geometric patterning, trails, textured surfaces."],
+      ["Mind","Psychedelic thinking with variable clarity and emotional intensity."],
+      ["Body","Stimulation, nausea, muscle tension, temperature sensitivity, faster heart rate."],
+      ["Emotion","Euphoria, sensuality, sociability, anxiety, or overstimulation."]
+    ],
+    calm:"<b>A noticeable body load can happen.</b> Because this is a family, do not use a generic 2C-x description to explain away severe cardiovascular or temperature symptoms.",
+    anchors:[
+      ["Compound name","2C-B, 2C-C, 2C-D, 2C-E, and others are different drugs."],
+      ["Identity","Testing matters especially with powders and pressed tablets."],
+      ["Stimulation","Heat and exertion can feel rougher with a stimulating psychedelic."]
+    ],
+    red:"<b>More concerning:</b> seizure, collapse, severe chest pain, dangerously high temperature, severe agitation, or unexpectedly intense effects from an unknown product."
+  },
+
+  dissociatives:{
+    name:"Dissociatives", class:"dissociative family", color:"#a6e2df",
+    lead:"Dissociatives can separate perception from the body and environment, while also impairing movement, memory, judgment, and awareness.",
+    derivatives:{
+      "Ketamine":"Shorter-acting dissociative with medical use and a large evidence base.",
+      "PCP / PCP-like compounds":"Often longer, more stimulating, and potentially more behaviorally unpredictable than ketamine.",
+      "Research dissociatives":"Potency and duration can vary dramatically; family resemblance does not create dose equivalence.",
+      "DXM":"A distinct over-the-counter dissociative with serotonergic and metabolic considerations; use the dedicated DXM profile for its calculator."
+    },
+    routes:{
+      "Oral":"Slower onset than faster routes.|Often longer than faster-delivery routes.|Delayed onset can make impairment sneak up later.",
+      "Intranasal":"Faster feedback than oral use.|Often shorter than oral use for the same compound.|Motor impairment can arrive quickly; route is not a reliable dose-equivalence shortcut.",
+      "Inhaled / vaporized":"Rapid onset for compounds used this way.|Varies.|Very fast changes make environmental safety especially important."
+    },
+    character:"detached, numb, floaty, spatially strange, dreamlike",
+    uncertainty:"compound, route, and duration vary enormously",
+    effects:[
+      ["Body","Numbness, heaviness/weightlessness, poor coordination, altered pain perception."],
+      ["Space","Rooms may feel huge, tiny, tilted, distant, or flattened."],
+      ["Mind","Dreamlike thinking, confusion, emotional distance, memory gaps."],
+      ["Movement","Walking can be much worse than subjective confidence suggests."]
+    ],
+    calm:"<b>Feeling detached from your body or surroundings is central to dissociation.</b> Sit or lie somewhere safe and avoid testing your balance around hazards.",
+    anchors:[
+      ["Falls","Motor impairment and numbness make ordinary hazards more important."],
+      ["Depressants","Alcohol, opioids, benzodiazepines, and other depressants can worsen sedation and airway risk."],
+      ["Identity","PCP analogues and research dissociatives can differ dramatically in potency and duration."]
+    ],
+    red:"<b>More concerning:</b> trouble breathing, repeated vomiting while deeply sedated, collapse, seizure, severe agitation, very high temperature, or inability to wake."
+  },
+
+  dxm:{
+    name:"DXM", class:"dissociative / cough suppressant", color:"#9ecfff", dxm:true,
+    lead:"DXM can produce stimulation, intoxication, dissociation, altered body perception, visual weirdness, and strong changes in time and music perception.",
+    derivatives:{
+      "Dextromethorphan HBr":"Immediate-release salt form used by many OTC products.",
+      "DXM freebase":"Same active molecule without the hydrobromide salt mass; milligrams are not directly interchangeable with HBr milligrams.",
+      "Dextromethorphan polistirex":"Extended-release resin form used in many 12-hour products; labels typically state an HBr-equivalent amount."
+    },
+    routes:{
+      "Immediate-release oral":"Develops over hours rather than instantly.|Several-hour dissociative time-course.|Delayed onset makes repeated additions before the peak especially hard to judge.",
+      "Extended-release oral":"Slower and more drawn-out.|Longer tail and flatter timing than immediate release.|Immediate-release plateau timing is a rougher fit."
+    },
+    character:"dreamy, floaty, music-heavy, dissociative",
+    uncertainty:"metabolism, formulation, and other active ingredients",
+    effects:[
+      ["Mind","Dreaminess, dissociation, altered thought flow, confusion at stronger levels."],
+      ["Body","Wobbliness, numbness, altered body-position sense, nausea, stimulation or sedation."],
+      ["Perception","Music immersion, visual distortion, changed depth and spatial perception."],
+      ["Time","Time may feel stretched, chopped up, delayed, or distant."]
+    ],
+    calm:"<b>Floatiness, body weirdness, time distortion, and dissociation can be expected DXM effects.</b> Stay physically settled and do not chase delayed effects.",
+    anchors:[
+      ["Active ingredients","Combination cough/cold products may contain additional drugs whose toxicity becomes the real problem."],
+      ["Formulation","HBr, freebase, and polistirex are not the same milligram label."],
+      ["Serotonin","DXM has serotonergic effects, so some medication and drug combinations can increase serotonin-toxicity risk."]
+    ],
+    red:"<b>More concerning:</b> trouble breathing, collapse, seizure, very high temperature, rapidly worsening severe confusion, or inability to wake."
+  },
+
+  nootropics:{
+    name:"Nootropics", class:"functional / marketing category", color:"#d9e8a2",
+    lead:"'Nootropic' describes an intended purpose, not one pharmacological family. The actual ingredient matters more than the marketing label.",
+    derivatives:{
+      "Caffeine / stimulant blend":"Can increase alertness, heart rate, anxiety, tremor, and insomnia.",
+      "Racetam-like product":"Evidence and legal status vary; products may not be standardized.",
+      "Herbal / mushroom blend":"Effects may be subtle, inconsistent, or unsupported by strong evidence.",
+      "Multi-ingredient stack":"Several individually mild ingredients can still interact or add together."
+    },
+    routes:{
+      "Oral capsule / powder":"Usually a slower, longer time-course than inhaled stimulants.|Depends on the actual ingredient.|Stacks can hide duplicate stimulants or overlapping ingredients.",
+      "Drink / liquid":"Can be consumed quickly even when the pharmacology is still delayed.|Depends on ingredient.|Energy-style products can make it easy to lose track of total stimulant intake."
+    },
+    character:"depends entirely on the actual ingredient",
+    uncertainty:"ingredient identity, stack composition, evidence quality",
+    effects:[
+      ["Stimulant-like","Alertness, faster heartbeat, anxiety, tremor, insomnia."],
+      ["Sedating-like","Relaxation, dizziness, slowed thinking, impaired coordination."],
+      ["Supplements","Effects may be subtle or inconsistent."],
+      ["Stacks","Several mild ingredients can add up pharmacologically."]
+    ],
+    calm:"<b>Start with the ingredient list, not the word nootropic.</b> Unexpected psychoactive effects are information that the product may be stronger or different than advertised.",
+    anchors:[
+      ["Read the label","List every active ingredient before reasoning about effects or interactions."],
+      ["Overlap","Caffeine and other stimulants can quietly stack across multiple products."],
+      ["Claims","Natural, focus, mushroom, adaptogen, and nootropic do not guarantee safety or effectiveness."]
+    ],
+    red:"<b>More concerning:</b> severe chest pain, fainting, seizure, trouble breathing, very high temperature, severe agitation, or rapidly worsening confusion."
+  }
+};
+
+const DERIVATIVE_PROFILES = {
+  psilocybin:{
+    "Psilocybin mushrooms":{
+      evidence:["high","Human psilocybin data are strong; lemon-tek-specific claims are mostly community-level."],
+      note:"Whole mushrooms contain variable psilocybin/psilocin and other fungal material, so potency and nausea can be less predictable than an isolated compound.",
+      comparison:"Unlike 4-AcO-DMT, mushrooms are a variable natural material rather than a single synthetic tryptamine. Lemon tek is a method claim, not a separate drug.",
+      routes:DATA.psilocybin.routes
+    },
+    "4-AcO-DMT (psilacetin)":{
+      evidence:["mid","Preclinical 5-HT2 pharmacology plus qualitative human reports; controlled human pharmacokinetics remain sparse."],
+      lead:"4-AcO-DMT is a 4-acetoxy tryptamine widely described as psilocybin-like. Preclinical work supports in-vivo deacetylation of 4-acetoxy tryptamines to their 4-hydroxy counterparts.",
+      character:"psilocybin-like, visual, introspective, dreamlike",
+      uncertainty:"direct controlled human comparisons with psilocybin remain limited",
+      note:"Likely prodrug-like relation to psilocin, but milligrams and timing should not be treated as interchangeable with mushrooms or psilocybin.",
+      comparison:"Qualitative research often describes it as mimicking psilocybin, while pharmacology suggests deacetylation to psilocin. That supports similarity, not a dose conversion.",
+      routes:{"Oral":"Gradual psychedelic development.|Multi-hour psychedelic course.|Product identity and purity matter more than assuming it behaves exactly like mushrooms.","Other / unknown route":"Route-specific human data are too sparse for a reliable timing profile.|Unknown / route-dependent.|Do not infer an oral-equivalent amount by applying a homemade multiplier."},
+      effects:[["Vision","Patterning, color shifts, altered depth, flowing textures, closed-eye imagery."],["Mind","Dreamlike thought, introspection, emotional amplification, changes in self-perception."],["Body","Nausea, stimulation or heaviness, temperature sensitivity, pupil dilation."],["Time","Elastic or nonlinear time perception."]],
+      calm:"<b>A psilocybin-like psychedelic state is plausible with 4-AcO-DMT.</b> Sparse data means uncertainty should stay visible rather than being filled with confident internet folklore.",
+      anchors:[["Verify identity","4-AcO-DMT is frequently associated with products whose labeling may be incomplete or inaccurate."],["No dose equivalence","Similarity to psilocin does not create a safe mushrooms-to-4-AcO-DMT conversion."],["Evidence gap","Community reports are context, not controlled pharmacokinetics."]]
+    },
+    "4-HO-MET (metocin)":{
+      evidence:["low","Preclinical pharmacology and qualitative human reports; little controlled human work."],
+      lead:"4-HO-MET is a psilocin analogue in the 4-hydroxy tryptamine family. Human controlled data are limited.",
+      character:"often described as visually foregrounded and comparatively clear-headed, but highly variable",
+      uncertainty:"little controlled human pharmacokinetic or safety data",
+      note:"A 4-hydroxy tryptamine related to psilocin, but not a psilocybin dose-equivalent.",
+      comparison:"Community reports often emphasize visuals more than emotional depth compared with psilocybin. That is a report pattern, not a clinical rule.",
+      routes:{"Oral":"Gradual psychedelic onset.|Several-hour course is commonly reported.|Sparse human data make precise timing uncertain.","Other / unknown route":"Insufficient reliable route data.|Unknown.|Avoid route-equivalence assumptions."}
+    },
+    "4-AcO-MET":{
+      evidence:["low","Structure-activity/preclinical evidence plus community reports."],
+      lead:"4-AcO-MET is the acetoxy analogue of 4-HO-MET. Broader 4-acetoxy pharmacology makes deacetylation plausible, but direct human evidence is very limited.",
+      character:"visual, psychedelic, 4-HO-MET-like in many reports",
+      uncertainty:"very little controlled human evidence",
+      note:"Treat as its own compound rather than 'the same as 4-HO-MET with a different strength.'",
+      comparison:"The acetoxy/hydroxy relationship supports biochemical similarity, not a reliable potency conversion.",
+      routes:{"Oral":"Gradual psychedelic onset.|Multi-hour course is reported.|Sparse human data and product identity are the main uncertainties.","Other / unknown route":"Insufficient reliable route data.|Unknown.|Do not infer route-equivalent amounts."}
+    },
+    "4-HO-MiPT (miprocin)":{
+      evidence:["low","Limited pharmacology plus qualitative/community reports."],
+      lead:"4-HO-MiPT is a 4-hydroxy tryptamine analogue with little controlled human study.",
+      character:"psychedelic, sensory and sometimes described as more tactile/body-focused",
+      uncertainty:"subjective profile is dominated by community-level evidence",
+      note:"MiPT, MET, DMT and DiPT suffixes are chemically meaningful; they should not share one dose chart.",
+      comparison:"Users sometimes emphasize tactile/body effects compared with psilocybin, but this is not a controlled finding.",
+      routes:{"Oral":"Gradual psychedelic development.|Several-hour course commonly reported.|Body load and product identity can be hard to predict.","Other / unknown route":"Insufficient route-specific evidence.|Unknown.|Avoid route conversions."}
+    }
+  },
+
+  dmt:{
+    "N,N-DMT":{
+      evidence:["high","Human experimental pharmacology and observational literature."],
+      comparison:"Compared with 5-MeO-DMT, N,N-DMT is usually more visually elaborate and less dominated by nonvisual ego-dissolution.",
+      routes:{"Inhaled / vaporized":"Very rapid onset and intense changes.|Comparatively brief but can feel subjectively enormous.|Loss of orientation can happen before there is time to move somewhere safer.","Oral with MAOI":"Slow oral development compared with inhalation.|Much longer than inhaled DMT.|MAO inhibition creates important medication and drug interactions."}
+    },
+    "5-MeO-DMT":{
+      evidence:["high","Systematic/narrative human literature and modern clinical work; still less extensive than LSD/psilocybin."],
+      lead:"5-MeO-DMT is a short-acting tryptamine with comparatively less visual imagery than N,N-DMT and a stronger tendency toward ego-dissolution, unity, or loss of ordinary self-world boundaries.",
+      character:"rapid, less visually ornate, ego-dissolving, intense",
+      uncertainty:"real-world products and routes vary; MAOI combinations are a major interaction concern",
+      note:"5-MeO-DMT is not 'stronger N,N-DMT.' It has a distinct receptor profile and subjective character.",
+      comparison:"Research reviews describe relatively fewer visual effects and higher ego-dissolution/mystical-type effects than N,N-DMT.",
+      routes:{"Inhaled / vaporized":"Very rapid and potentially overwhelming onset.|Comparatively brief but intense.|Rapid loss of awareness can create aspiration, fall and environmental hazards.","Intranasal":"Slower than inhalation but still relatively rapid.|Longer/less abrupt than inhalation in limited human research.|Route-specific irritation and prolonged impairment can matter."},
+      effects:[["Self","Ego-dissolution, unity, loss of ordinary identity or boundaries."],["Perception","Often fewer elaborate visuals than N,N-DMT, though perception can still radically change."],["Body","Strong autonomic sensations, shaking, vocalization, nausea or loss of coordinated control may occur."],["Meaning","Mystical-type or overwhelmingly significant experiences are frequently reported."]],
+      calm:"<b>Profound loss of normal self-world boundaries can happen with 5-MeO-DMT.</b> Because awareness and motor control can change rapidly, physical positioning matters more than trying to interpret the experience.",
+      anchors:[["MAOI caution","MAO-inhibiting drugs can substantially alter exposure and serotonergic risk."],["Position","Loss of awareness can happen quickly; environmental safety matters."],["Do not substitute","Do not use an N,N-DMT mental model or dose logic for 5-MeO-DMT."]]
+    },
+    "Bufotenine (5-HO-DMT)":{
+      evidence:["mid","Older human literature plus receptor pharmacology; modern controlled data are limited."],
+      lead:"Bufotenine is 5-hydroxy-DMT, a serotonin-like tryptamine found in some plants and animal secretions. Its human psychedelic profile is less well characterized than N,N-DMT or 5-MeO-DMT.",
+      character:"psychedelic, somatically prominent in some reports, incompletely characterized",
+      uncertainty:"modern human pharmacokinetic and subjective data are limited",
+      note:"5-HO-DMT and 5-MeO-DMT are chemically and pharmacologically distinct.",
+      comparison:"Do not use N,N-DMT or 5-MeO-DMT as a copy-paste profile for bufotenine.",
+      routes:{"Unknown / product-dependent":"Reliable route-specific human profiles are limited.|Variable.|Source material may contain multiple active alkaloids."}
+    },
+    "5-MeO-MiPT (moxy)":{
+      evidence:["low","Qualitative human reports and limited pharmacology."],
+      lead:"5-MeO-MiPT is a 5-methoxy tryptamine often described as more stimulating, tactile or entactogenic than N,N-DMT.",
+      character:"stimulating, tactile, psychedelic, socially amplifying in some reports",
+      uncertainty:"limited controlled human safety data",
+      note:"Despite the name, it is not a short DMT-style breakthrough compound.",
+      comparison:"Compared with 5-MeO-DMT, reports emphasize a longer, more stimulating and sensory experience rather than rapid ego-dissolution.",
+      routes:{"Oral":"Gradual onset.|Longer sustained intoxication than inhaled DMT-style experiences.|Stimulation and body load may be more persistent.","Other / unknown route":"Insufficient reliable route-specific data.|Unknown.|No trustworthy generic route-equivalence conversion."}
+    },
+    "DiPT":{
+      evidence:["low","Small literature plus community reports."],
+      lead:"DiPT is unusual among psychedelic tryptamines because auditory pitch distortion is a prominent reported effect.",
+      character:"auditory-distorting, psychedelic, unusual sensory profile",
+      uncertainty:"controlled human data are sparse",
+      note:"DiPT is not 5-MeO-DiPT; the 5-methoxy substitution changes the profile.",
+      comparison:"Compared with N,N-DMT, the hallmark reports are more auditory than immersive visual.",
+      routes:{"Oral":"Gradual psychedelic onset.|Several-hour course is reported.|Auditory distortion can affect communication and environmental awareness.","Other / unknown route":"Insufficient reliable route data.|Unknown.|Avoid route-equivalence assumptions."}
+    }
+  },
+
+  lysergamides:{
+    "LSD":{evidence:["high","Substantial controlled human literature."],comparison:"The reference point for newer lysergamides, but not a universal potency/duration template."},
+    "1P-LSD":{
+      evidence:["high","Small human pharmacokinetic study plus analytical/preclinical evidence."],
+      lead:"1P-LSD is an N1-propionyl LSD derivative. Human pharmacokinetic work supports conversion to LSD after administration, consistent with prodrug-like behavior.",
+      character:"LSD-like in reported and experimental effects",
+      uncertainty:"human evidence is much smaller than for LSD itself",
+      note:"Human samples detected LSD after 1P-LSD administration, supporting prodrug-like behavior.",
+      comparison:"The prodrug evidence supports LSD-like pharmacology, but not a claim that every timing or potency detail is identical.",
+      routes:{"Oral / blotter":"Gradual lysergamide onset.|Long-lasting.|Analogue identity should be verified where possible.","Sublingual / buccal":"Still a prolonged lysergamide route.|Long-lasting.|Do not use route as a shortcut to infer an equivalent amount."}
+    },
+    "1cP-LSD":{
+      evidence:["mid","Human-serum conversion evidence plus analytical/preclinical work; limited direct human effects data."],
+      lead:"1cP-LSD is a cyclopropanoyl LSD derivative. Human-serum work shows formation of LSD, supporting prodrug-like behavior.",
+      character:"likely LSD-like, but less directly studied in humans",
+      uncertainty:"direct controlled human subjective data are limited",
+      note:"Serum conversion to LSD has been demonstrated; subjective equivalence is less directly studied.",
+      comparison:"Mechanistically it fits the 1-acyl prodrug-like family, but the human evidence is thinner than for LSD or 1P-LSD.",
+      routes:{"Oral / blotter":"Gradual lysergamide onset.|Long-lasting.|Do not assume equal potency with LSD."}
+    },
+    "ALD-52 (1A-LSD)":{
+      evidence:["mid","Historical human reports plus biotransformation/pharmacology evidence."],
+      lead:"ALD-52 is 1-acetyl-LSD, a classic 1-acyl LSD derivative.",
+      character:"LSD-like",
+      uncertainty:"modern controlled human comparisons are limited",
+      note:"Belongs to the 1-acyl prodrug-like LSD family.",
+      comparison:"Do not confuse ALD-52 with AL-LAD; one is an N1-acyl LSD derivative, the other a distinct N6-allyl lysergamide.",
+      routes:{"Oral / blotter":"Gradual lysergamide onset.|Long-lasting.|Blotter identity remains the main practical uncertainty."}
+    },
+    "AL-LAD":{
+      evidence:["mid","Preclinical pharmacology plus comparative user research."],
+      lead:"AL-LAD is an N6-allyl lysergamide related to LSD. It is a distinct active lysergamide rather than merely an LSD prodrug.",
+      character:"often described as visual and somewhat less cognitively heavy than LSD, but individual variation is large",
+      uncertainty:"human controlled pharmacokinetics are limited",
+      note:"Distinct active analogue, not a prodrug label for LSD.",
+      comparison:"Comparative user research exists, but subtle 'lighter/heavier' rankings remain self-report rather than controlled clinical facts.",
+      routes:{"Oral / blotter":"Gradual lysergamide onset.|Long-lasting.|Do not use LSD potency or duration as a direct conversion."}
+    },
+    "ETH-LAD":{
+      evidence:["low","Comparative user research plus analytical/preclinical data; recent severe toxicity case report."],
+      lead:"ETH-LAD is an N6-ethyl lysergamide analogue. Controlled human data are sparse, and a 2026 analytically confirmed case described severe toxicity.",
+      character:"LSD-like but often reported as more intense or physically demanding",
+      uncertainty:"limited controlled human data and potentially different toxicity profile from LSD",
+      note:"Distinct active lysergamide; do not use LSD safety assumptions to dismiss severe symptoms.",
+      comparison:"A recent confirmed case involved severe agitation, unconsciousness, injury and persistent psychosis, so 'LSD analogue' should not be read as 'same toxicity profile.'",
+      routes:{"Oral / blotter":"Gradual lysergamide onset.|Long-lasting.|Do not use LSD assumptions to normalize unexpectedly severe symptoms."},
+      red:"<b>More concerning:</b> severe agitation, loss of consciousness, traumatic injury, seizure, collapse, very high temperature, or prolonged psychotic symptoms."
+    },
+    "LSZ":{
+      evidence:["low","Preclinical LSD-like activity plus limited human reports."],
+      lead:"LSZ is a distinct lysergamide analogue with LSD-like activity in preclinical models and sparse controlled human data.",
+      character:"LSD-like psychedelic profile is plausible",
+      uncertainty:"little modern controlled human evidence",
+      note:"Animal potency cannot be cleanly translated into human potency.",
+      comparison:"Do not confuse LSZ with LSA; similar abbreviations, different compounds.",
+      routes:{"Oral / blotter":"Gradual lysergamide onset.|Long-lasting.|Avoid converting preclinical potency into a human amount."}
+    },
+    "LSA / ergine":{
+      evidence:["high","2025 systematic review of human data; less controlled evidence than LSD."],
+      lead:"LSA (ergine, lysergic acid amide) occurs in seeds from some Convolvulaceae plants. Human literature reports euphoria and hallucinations alongside substantial nausea and anxiety.",
+      character:"dreamy, sedating or psychedelic, often more body-heavy than LSD",
+      uncertainty:"seed alkaloid content varies and whole plant material contains multiple ergoline alkaloids",
+      note:"LSA is not 'natural LSD.' The physical profile and source chemistry differ.",
+      comparison:"Compared with LSD, human reports emphasize nausea, anxiety and physical heaviness more often; seed products are also chemically variable mixtures.",
+      routes:{"Oral seed material":"Gradual oral onset.|Several-hour experience with potentially prolonged body effects.|Seed potency varies; nausea and vascular/body discomfort are common concerns.","Prepared seed material / extract product":"Still an oral ergoline exposure; timing depends on actual contents.|Variable.|Preparation does not make the alkaloid mixture standardized or verify purity."},
+      effects:[["Mind","Euphoria, dreaminess, anxiety, introspection or hallucination."],["Body","Nausea, vomiting, fatigue, heaviness and vascular/body discomfort can occur."],["Perception","Visual changes can occur but may feel less LSD-like than expected."],["Time","A long altered-state and body-effect window is possible."]],
+      calm:"<b>LSA can feel much more physically heavy than the phrase 'LSD-like' suggests.</b> Nausea and anxiety are documented, but severe vascular or neurologic symptoms should not be normalized.",
+      anchors:[["Plant variability","Seed alkaloid content is not standardized."],["More than LSA","Whole seeds contain multiple ergoline alkaloids."],["Do not equate with LSD","The subjective and physical profiles differ."]]
+    }
+  },
+
+  "2cx":{
+    "2C-B":{evidence:["high","Controlled and observational human studies."],comparison:"Best-characterized 2C compound in modern human work; do not use it as a universal 2C potency template."},
+    "2C-C":{evidence:["low","Sparse human reports and designer-drug literature."],lead:"2C-C is a chloro-substituted 2C-series phenethylamine with limited controlled human research.",character:"often described as gentler or more sedating than some relatives, but this is anecdotal",uncertainty:"little controlled human pharmacology",note:"Community descriptions such as 'gentler' are not clinical safety labels.",comparison:"2C-C is a distinct compound, not a lower-strength 2C-B.",routes:{"Oral":"Gradual onset.|Several-hour psychedelic course is reported.|Limited evidence makes exact timing approximate."}},
+    "2C-D":{evidence:["low","Designer-drug metabolism/review literature plus limited human reports."],lead:"2C-D is a methyl-substituted 2C phenethylamine with limited modern controlled human data.",character:"psychedelic, often described as comparatively clear or mild in some reports",uncertainty:"human pharmacology remains thin",note:"Do not treat community nicknames as a safety assessment.",comparison:"2C-D is a distinct drug, not a formulation of 2C-B.",routes:{"Oral":"Gradual onset.|Several-hour course reported.|Sparse data make exact timing approximate."}},
+    "2C-E":{evidence:["high","Small human observational pharmacology study."],lead:"2C-E is a psychedelic phenethylamine with documented visual, subjective and cardiovascular effects in human observational research.",character:"often described as deeper, heavier and more demanding than 2C-B",uncertainty:"small human samples and limited broader safety data",note:"Human data exist, but sample sizes are small.",comparison:"Do not use 2C-B as a potency or psychological-depth template for 2C-E.",routes:{"Oral":"Gradual psychedelic development.|Several-hour course documented in human observation.|Body load and cardiovascular stimulation can be more noticeable."}},
+    "2C-I":{evidence:["low","Toxicology/review literature plus community reports."],lead:"2C-I is an iodinated 2C-series psychedelic phenethylamine. Modern controlled human pharmacology is limited.",character:"visual, stimulating, psychedelic",uncertainty:"limited controlled human data",note:"2C-I is not 25I-NBOMe.",comparison:"25I-NBOMe is an N-benzyl derivative with much higher receptor affinity and a more concerning toxicity history.",routes:{"Oral":"Gradual psychedelic/stimulant onset.|Multi-hour course is reported.|Sparse controlled data and stimulant body load are key uncertainties.","Other / unknown":"Insufficient reliable route data.|Unknown.|No generic route-equivalence calculation."}},
+    "2C-T-2":{evidence:["low","Designer-drug literature plus case/experience reports."],lead:"2C-T-2 is a sulfur-containing 2C-series psychedelic with sparse controlled human data.",character:"psychedelic, visual, body-heavy in some reports",uncertainty:"sparse modern human safety data",note:"The 2C-T subgroup should not borrow 2C-B safety assumptions.",comparison:"2C-T-2 and 2C-T-7 are different compounds with a thinner safety evidence base than 2C-B.",routes:{"Oral":"Gradual onset.|Multi-hour course reported.|Body load and toxicology uncertainty deserve more attention."}},
+    "2C-T-7":{evidence:["low","Case/toxicology literature and designer-drug reviews."],lead:"2C-T-7 is a sulfur-containing psychedelic phenethylamine with documented severe toxicity in the broader clinical literature.",character:"psychedelic, visual, potentially body-heavy",uncertainty:"limited controlled human data and a more concerning toxicity history",note:"Do not treat it as another cosmetic 2C variant.",comparison:"The 2C-T compounds have a different evidence and toxicity picture from better-studied 2C-B.",routes:{"Oral":"Gradual onset.|Multi-hour course reported.|Severe symptoms should not be normalized as ordinary 2C body load."},red:"<b>More concerning:</b> seizure, collapse, severe chest pain, very high temperature, severe agitation, or rapidly worsening confusion."},
+    "25I-NBOMe / NBOMe family":{evidence:["mid","Toxicology case series/reviews plus receptor pharmacology."],lead:"NBOMe compounds are N-benzyl derivatives of 2C-type phenethylamines with extremely high 5-HT2A affinity and a documented record of severe toxicity and fatalities.",character:"intensely psychedelic, stimulating, potentially vasoconstrictive",uncertainty:"identity and tiny active quantities make mislabeling especially dangerous",note:"NBOMe/NBOH compounds are deliberately separated from ordinary 2C-x compounds.",comparison:"25I-NBOMe is not 'strong 2C-I.' N-benzyl substitution markedly increases 5-HT2A affinity and changes practical risk.",routes:{"Blotter / buccal exposure":"Can develop relatively quickly depending on compound and route.|Often multi-hour.|Tiny active quantities and misrepresented blotter make identity and measurement major risks.","Unknown route / product":"Route and compound-specific timing vary.|Unknown.|Do not apply 2C-x route or amount expectations."},effects:[["Vision","Strong geometric and color effects."],["Body","Vasoconstriction, tachycardia, hypertension, agitation and temperature elevation can occur."],["Mind","Intense psychedelic cognition, anxiety and confusion."],["Toxicity","Seizures, hyperthermia and rhabdomyolysis are documented in severe cases."]],calm:"<b>This is not a family where severe physical symptoms should be normalized as psychedelic body load.</b>",anchors:[["Identity","Blotter sold as LSD has sometimes contained NBOMe compounds."],["Potency","Do not use 2C-I or LSD amount logic."],["Toxicology","Severe vasoconstriction, hyperthermia and seizures have been reported."]],red:"<b>More concerning:</b> seizure, marked vasoconstriction, severe chest pain, very high temperature, severe agitation, collapse, or rapidly worsening confusion."}
+  }
+};
+
+const tabs = [...document.querySelectorAll(".tab")];
+let currentKey = "psilocybin";
+
+function splitRoute(text){
+  const p = text.split("|");
+  return [p[0]||"",p[1]||"",p[2]||""];
+}
+
+function renderProfile(key){
+  currentKey = key;
+  const p = DATA[key];
+  tabs.forEach(btn=>btn.setAttribute("aria-pressed",String(btn.dataset.key===key)));
+  document.getElementById("profileHead").style.background = p.color;
+  document.getElementById("name").textContent = p.name;
+  document.getElementById("class").textContent = p.class;
+  document.getElementById("lead").textContent = p.lead;
+  document.getElementById("character").textContent = p.character;
+  document.getElementById("uncertainty").textContent = p.uncertainty;
+  document.getElementById("calm").innerHTML = p.calm;
+  document.getElementById("redflag").innerHTML = p.red;
+  document.getElementById("dxmCalc").hidden = !p.dxm;
+
+  const derivative = document.getElementById("derivative");
+  derivative.replaceChildren();
+  Object.keys(p.derivatives).forEach(name=>{
+    const o=document.createElement("option");o.value=name;o.textContent=name;derivative.appendChild(o);
+  });
+
+  const route = document.getElementById("route");
+  route.replaceChildren();
+  Object.keys(p.routes).forEach(name=>{
+    const o=document.createElement("option");o.value=name;o.textContent=name;route.appendChild(o);
+  });
+
+  const effects = document.getElementById("effects");
+  effects.replaceChildren();
+  p.effects.forEach(([a,b])=>{
+    const d=document.createElement("div");d.className="effect";
+    const s=document.createElement("b");s.textContent=a;
+    const t=document.createElement("span");t.textContent=b;
+    d.append(s,t);effects.appendChild(d);
+  });
+
+  const anchors = document.getElementById("anchors");
+  anchors.replaceChildren();
+  p.anchors.forEach(([a,b])=>{
+    const li=document.createElement("li");
+    const strong=document.createElement("strong");strong.textContent=a+": ";
+    li.append(strong,document.createTextNode(b));anchors.appendChild(li);
+  });
+
+  updateDerivative();
+  updateRoute();
+  if(p.dxm) calculateDXM();
+}
+
+function currentDerivativeProfile(){
+  const key=document.getElementById("derivative").value;
+  return (DERIVATIVE_PROFILES[currentKey]||{})[key]||null;
+}
+
+function renderEffects(list){
+  const effects=document.getElementById("effects");
+  effects.replaceChildren();
+  list.forEach(([a,b])=>{
+    const d=document.createElement("div");d.className="effect";
+    const s=document.createElement("b");s.textContent=a;
+    const t=document.createElement("span");t.textContent=b;
+    d.append(s,t);effects.appendChild(d);
+  });
+}
+
+function renderAnchors(list){
+  const anchors=document.getElementById("anchors");
+  anchors.replaceChildren();
+  list.forEach(([a,b])=>{
+    const li=document.createElement("li");
+    const strong=document.createElement("strong");strong.textContent=a+": ";
+    li.append(strong,document.createTextNode(b));anchors.appendChild(li);
+  });
+}
+
+function updateDerivative(){
+  const base=DATA[currentKey];
+  const key=document.getElementById("derivative").value;
+  const d=currentDerivativeProfile();
+
+  document.getElementById("name").textContent=key;
+  document.getElementById("lead").textContent=(d&&d.lead)||base.lead;
+  document.getElementById("character").textContent=(d&&d.character)||base.character;
+  document.getElementById("uncertainty").textContent=(d&&d.uncertainty)||base.uncertainty;
+  document.getElementById("derivativeNote").textContent=(d&&d.note)||base.derivatives[key]||"";
+  document.getElementById("comparison").textContent=(d&&d.comparison)||"This selection uses the family baseline profile because derivative-specific human evidence is limited.";
+  document.getElementById("calm").innerHTML=(d&&d.calm)||base.calm;
+  document.getElementById("redflag").innerHTML=(d&&d.red)||base.red;
+  renderEffects((d&&d.effects)||base.effects);
+  renderAnchors((d&&d.anchors)||base.anchors);
+
+  const evidence=(d&&d.evidence)||["low","Derivative-specific evidence is limited; family-level information is shown."];
+  const pill=document.getElementById("evidencePill");
+  pill.className="evidence-pill "+(evidence[0]==="high"?"evidence-high":evidence[0]==="mid"?"evidence-mid":"evidence-low");
+  pill.textContent=evidence[0]==="high"?"human data":evidence[0]==="mid"?"mixed evidence":"limited";
+  document.getElementById("evidenceCopy").textContent=evidence[1];
+
+  const routes=(d&&d.routes)||base.routes;
+  const route=document.getElementById("route");
+  route.replaceChildren();
+  Object.keys(routes).forEach(name=>{
+    const o=document.createElement("option");o.value=name;o.textContent=name;route.appendChild(o);
+  });
+  updateRoute();
+}
+
+function updateRoute(){
+  const base=DATA[currentKey];
+  const d=currentDerivativeProfile();
+  const routes=(d&&d.routes)||base.routes;
+  const key=document.getElementById("route").value;
+  const [onset,duration,risk]=splitRoute(routes[key]||"");
+  document.getElementById("routeTitle").textContent=key;
+  document.getElementById("onset").textContent=onset;
+  document.getElementById("duration").textContent=duration;
+  document.getElementById("routeRisk").textContent=risk;
+}
+
+tabs.forEach(btn=>btn.addEventListener("click",()=>renderProfile(btn.dataset.key)));
+document.getElementById("derivative").addEventListener("change",updateDerivative);
+document.getElementById("route").addEventListener("change",updateRoute);
+
+// DXM calculator: known-amount interpretation only.
+const HBR_TO_FREEBASE=0.733;
+const plateau=[
+  [0,1.5,"Below the usual first-plateau range"],
+  [1.5,2.5,"First plateau"],
+  [2.5,7.5,"Second plateau"],
+  [7.5,15,"Third plateau"],
+  [15,20,"Fourth plateau"],
+  [20,Infinity,"Above the usual plateau chart"]
+];
+let dxmForm="hbr";
+
+function setForm(form){
+  dxmForm=form;
+  document.getElementById("formHbr").setAttribute("aria-pressed",String(form==="hbr"));
+  document.getElementById("formFreebase").setAttribute("aria-pressed",String(form==="freebase"));
+  document.getElementById("formPolistirex").setAttribute("aria-pressed",String(form==="polistirex"));
+  calculateDXM();
+}
+function fmt(n,d=2){return Number(n).toLocaleString(undefined,{maximumFractionDigits:d})}
+function updateSource(){
+  const src=document.getElementById("source").value;
+  document.getElementById("capletFields").hidden=src!=="caplets";
+  document.getElementById("liquidFields").hidden=src!=="liquid";
+  calculateDXM();
+}
+function calculateDXM(){
+  const lb=Number.parseFloat(document.getElementById("weight").value);
+  if(!Number.isFinite(lb)||lb<=0){document.getElementById("dxmOutput").textContent="Enter a valid body weight.";return}
+  const src=document.getElementById("source").value;
+  let mg=Number.parseFloat(document.getElementById("amount").value);
+  if(src==="caplets"){
+    const c=Number.parseFloat(document.getElementById("count").value);
+    const s=Number.parseFloat(document.getElementById("strength").value);
+    mg=c*s;
+  }else if(src==="liquid"){
+    const v=Number.parseFloat(document.getElementById("volume").value);
+    const s=Number.parseFloat(document.getElementById("liquidStrength").value);
+    mg=v*(s/5);
+  }
+  if(!Number.isFinite(mg)||mg<0){document.getElementById("dxmOutput").textContent="Check the entered amount.";return}
+  const kg=lb/2.20462;
+  const hbrEq=dxmForm==="freebase"?mg/HBR_TO_FREEBASE:mg;
+  const freeEq=dxmForm==="freebase"?mg:mg*HBR_TO_FREEBASE;
+  const mgkg=hbrEq/kg;
+  const band=plateau.find(x=>mgkg>=x[0]&&mgkg<x[1])||plateau[plateau.length-1];
+  const label=dxmForm==="hbr"?"HBr":dxmForm==="freebase"?"freebase":"HBr-eq polistirex";
+  document.getElementById("kg").textContent=fmt(kg)+" kg";
+  document.getElementById("total").textContent=fmt(mg,1)+" mg "+label;
+  document.getElementById("mgkg").textContent=fmt(mgkg)+" mg/kg";
+  let note="";
+  if(dxmForm==="hbr") note=fmt(mg,1)+" mg HBr ≈ "+fmt(freeEq,1)+" mg freebase equivalent.";
+  if(dxmForm==="freebase") note=fmt(mg,1)+" mg freebase ≈ "+fmt(hbrEq,1)+" mg HBr-equivalent.";
+  if(dxmForm==="polistirex") note="Polistirex is interpreted using the HBr-equivalent amount printed on the label. Extended release makes immediate-release plateau timing a rough fit.";
+  document.getElementById("dxmOutput").textContent=band[2]+". "+note+" This describes an already-known amount; it is not a target.";
+}
+
+document.getElementById("formHbr").addEventListener("click",()=>setForm("hbr"));
+document.getElementById("formFreebase").addEventListener("click",()=>setForm("freebase"));
+document.getElementById("formPolistirex").addEventListener("click",()=>setForm("polistirex"));
+document.getElementById("source").addEventListener("change",updateSource);
+["weight","amount","count","strength","volume","liquidStrength"].forEach(id=>{
+  document.getElementById(id).addEventListener("input",calculateDXM);
+});
+
+renderProfile("psilocybin");
+setForm("hbr");
+updateSource();
+</script>
+</body>
+</html>
